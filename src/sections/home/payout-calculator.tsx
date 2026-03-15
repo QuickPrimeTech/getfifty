@@ -7,7 +7,9 @@ import {
   InputGroupAddon,
   InputGroupInput,
 } from "@/components/ui/input-group";
-import { User } from "lucide-react";
+import { PartyPopper, User } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import Link from "next/link";
 
 export const PayoutCalculator = () => {
   const [referrals, setReferrals] = useState<number>(5);
@@ -114,9 +116,20 @@ export const PayoutCalculator = () => {
               <p className="text-sm text-muted-foreground mb-2">
                 Your earnings
               </p>
-              <p className="payout-text text-[clamp(2.5rem,10vw,5rem)] font-extrabold text-primary leading-none">
-                Ksh {displayCount}/-
-              </p>
+              <div className="flex items-center justify-between gap-4">
+                <p className="payout-text text-[clamp(2.5rem,10vw,5rem)] font-extrabold leading-none">
+                  Ksh <span className="text-primary">{displayCount}/-</span>
+                </p>
+                <Button
+                  nativeButton={false}
+                  className={"flex-1 max-w-sm"}
+                  size={"xl"}
+                  render={<Link href={"/dashboard/create-account"} />}
+                >
+                  <PartyPopper />
+                  Start Earning
+                </Button>
+              </div>
             </div>
           </div>
         </motion.div>

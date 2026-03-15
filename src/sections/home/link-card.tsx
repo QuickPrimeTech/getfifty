@@ -8,7 +8,7 @@ import Link from "next/link";
 
 export const LinkCard = () => {
   const [copied, setCopied] = useState(false);
-  const link = "link.site/auth/create-account?referrer=xyz";
+  const link = "https://getfifty.vercel.app/auth/create-account?referrer=xyz";
   const handleCopy = () => {
     navigator.clipboard.writeText(link);
     setCopied(true);
@@ -18,9 +18,9 @@ export const LinkCard = () => {
   return (
     <section className="py-24 px-4">
       <div className="container flex flex-col items-center">
-        <p className="text-sm font-semibold uppercase tracking-widest text-muted-foreground mb-8">
+        <h2 className="text-sm font-semibold uppercase tracking-widest text-muted-foreground mb-8">
           Your Dashboard
-        </p>
+        </h2>
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -33,7 +33,7 @@ export const LinkCard = () => {
           className="p-6 w-full max-w-3xl bg-secondary border border-border rounded-[24px] flex flex-col gap-4 shadow-card"
         >
           <div className="flex justify-between items-center">
-            <span className="text-sm font-medium text-muted-foreground uppercase tracking-widest">
+            <span className="text-sm font-sans font-medium text-muted-foreground uppercase tracking-widest">
               Sample Link Preview
             </span>
             <div className="h-2 w-2 rounded-full bg-primary animate-pulse" />
@@ -72,13 +72,13 @@ export const LinkCard = () => {
             </div>
           </div>
 
-          {/* CTA to sign up */}
-          <Link href="/auth/create-account" className="w-full">
-            <Button className="w-full h-12 bg-primary text-primary-foreground font-bold rounded-full hover:opacity-90 transition-opacity group">
-              Get Your Real Link
-              <ArrowRight className="w-4 h-4 ml-2 transition-transform group-hover:translate-x-1" />
-            </Button>
-          </Link>
+          <Button
+            className="w-full h-12 bg-primary text-primary-foreground font-bold rounded-full hover:opacity-90 transition-opacity group"
+            render={<Link href="/auth/create-account" />}
+          >
+            Get Your Real Link
+            <ArrowRight className="w-4 h-4 ml-2 transition-transform group-hover:translate-x-1" />
+          </Button>
         </motion.div>
       </div>
     </section>

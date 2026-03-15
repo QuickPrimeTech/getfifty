@@ -41,7 +41,7 @@ export async function updateSession(request: NextRequest) {
   const user = data?.claims;
 
   // 1. Define your public paths here
-  const allowedPaths = ["/", "/auth"];
+  const allowedPaths = ["/", "/auth", "/help"];
 
   // 2. Check if the current path is in the allowed list
   const pathname = request.nextUrl.pathname;

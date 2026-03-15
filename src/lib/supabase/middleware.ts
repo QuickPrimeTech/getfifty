@@ -40,30 +40,23 @@ export async function updateSession(request: NextRequest) {
   const { data } = await supabase.auth.getClaims();
   const user = data?.claims;
 
-  // 1. Define your public paths here
-  const allowedPaths = ["/", "/auth", "/help"];
-
-  // 2. Check if the current path is in the allowed list
   const pathname = request.nextUrl.pathname;
-  const isAllowed =
-    pathname === "/" ||
-    allowedPaths.slice(1).some((path) => pathname.startsWith(path));
 
-  // 3. Logic: If no user and NOT on an allowed path, boot them to login
-  if (!user && !isAllowed) {
-    // no user, potentially respond by redirecting the user to the login page
+  // 1. Target specifically the dashboard routes
+  const isDashboardRoute = pathname.startsWith("/dashboard");
+  const isAuthRoute = pathname.startsWith("/auth");
+  const authenticatorRoutes = ["/auth/create-account", "/auth/login"];
+
+  // 2. PROTECT DASHBOARD: If trying to access dashboard without a session
+  if (isDashboardRoute && !user) {
     const url = request.nextUrl.clone();
-    url.pathname = "/auth/login";
+    url.pathname = `/auth/login`;
+    // Optional: add a redirect param to bring them back after login
+    url.searchParams.set("next", pathname);
     return NextResponse.redirect(url);
   }
 
-  const authenticatorRoutes = ["/auth/create-account", "/auth/login"];
-
-  //4. If the user is already logged in we can just take them to the dashboard
-  const isAuthRoute = authenticatorRoutes.some((route) =>
-    request.nextUrl.pathname.startsWith(route),
-  );
-
+  // 3. REDIRECT LOGGED IN USERS: If logged in but hitting /auth pages
   if (user && isAuthRoute) {
     const url = request.nextUrl.clone();
     url.pathname = "/dashboard";

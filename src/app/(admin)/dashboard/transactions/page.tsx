@@ -1,5 +1,10 @@
 "use client";
-
+import { Button } from "@/components/ui/button";
+import {
+  InputGroup,
+  InputGroupAddon,
+  InputGroupInput,
+} from "@/components/ui/input-group";
 import { transactions } from "@/sections/dashboard/transaction-history";
 import { motion } from "framer-motion";
 import { ArrowUpRight, ArrowDownLeft, Search } from "lucide-react";
@@ -38,29 +43,27 @@ export default function DashboardTransactions() {
       <div className="flex flex-col md:flex-row gap-4 mb-6">
         <div className="flex gap-2">
           {filters.map((f) => (
-            <button
+            <Button
               key={f.value}
               onClick={() => setFilter(f.value)}
-              className={`px-4 py-2 rounded-xl text-sm font-medium transition-colors ${
-                filter === f.value
-                  ? "bg-primary text-primary-foreground"
-                  : "bg-background border border-border text-muted-foreground hover:bg-secondary"
-              }`}
+              variant={filter === f.value ? "default" : "outline"}
             >
               {f.label}
-            </button>
+            </Button>
           ))}
         </div>
-        <div className="relative flex-1 max-w-xs">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-          <input
+        <InputGroup className="flex-1">
+          <InputGroupAddon>
+            <Search />
+          </InputGroupAddon>
+          <InputGroupInput
             type="text"
             placeholder="Search transactions..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="w-full pl-10 pr-4 py-2 bg-background border border-border rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-ring"
+            className="w-full"
           />
-        </div>
+        </InputGroup>
       </div>
 
       {/* Transaction List */}

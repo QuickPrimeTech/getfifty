@@ -5,6 +5,7 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
+  useSidebar,
 } from "@/components/ui/sidebar";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -20,6 +21,7 @@ export function NavMain({
   }[];
 }) {
   const pathname = usePathname();
+  const { setOpenMobile } = useSidebar();
 
   return (
     <SidebarGroup>
@@ -32,6 +34,7 @@ export function NavMain({
               <SidebarMenuItem key={item.title}>
                 <SidebarMenuButton
                   tooltip={item.title}
+                  onClick={() => setOpenMobile(false)}
                   className={cn(
                     "h-10 w-full justify-start gap-2 rounded-md px-3 font-medium transition-colors",
                     isActive

@@ -255,7 +255,7 @@ function SidebarTrigger({
   ...props
 }: React.ComponentProps<typeof Button>) {
   const { toggleSidebar } = useSidebar();
-  const { state } = useSidebar();
+  const { open, openMobile, isMobile } = useSidebar();
   return (
     <Tooltip>
       <TooltipTrigger
@@ -272,14 +272,16 @@ function SidebarTrigger({
             }}
             {...props}
           >
-            {state === "expanded" ? <PanelLeftClose /> : <PanelLeftOpen />}
+            {(isMobile && openMobile) || (!isMobile && open) ? (
+              <PanelLeftClose />
+            ) : (
+              <PanelLeftOpen />
+            )}
             <span className="sr-only">Toggle Sidebar</span>
           </Button>
         }
       />
-      <TooltipContent>
-        {state === "collapsed" ? "Open Sidebar" : "Close Sidebar"}
-      </TooltipContent>
+      <TooltipContent>{open ? "Open Sidebar" : "Close Sidebar"}</TooltipContent>
     </Tooltip>
   );
 }

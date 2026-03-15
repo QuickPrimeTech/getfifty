@@ -115,7 +115,7 @@ export const PayoutCalculator = () => {
                 Your earnings
               </p>
               <p className="payout-text text-[clamp(2.5rem,10vw,5rem)] font-extrabold text-primary leading-none">
-                {displayCount}/-
+                Ksh {displayCount}/-
               </p>
             </div>
           </div>

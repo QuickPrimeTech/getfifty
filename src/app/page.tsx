@@ -1,23 +1,23 @@
-import HeroSection from "@/components/HeroSection";
-import TrustBar from "@/components/TrustBar";
-import MechanismSection from "@/components/MechanismSection";
-import LinkCard from "@/components/LinkCard";
-import PayoutCalculator from "@/components/PayoutCalculator";
-import CTASection from "@/components/CTASection";
+import { HeroSection } from "@/sections/home/hero";
+import { TrustBar } from "@/sections/home/trust-bar";
+import { LinkCard } from "@/sections/home/link-card";
+import { PayoutCalculator } from "@/sections/home/payout-calculator";
+import { CTASection } from "@/sections/home/cta-section";
+import { Steps } from "@/sections/home/steps";
 
 export default function Home() {
   return (
     <div className="min-h-screen bg-background">
       <HeroSection />
       <TrustBar />
-      <MechanismSection />
+      <Steps />
       <LinkCard />
       <PayoutCalculator />
       <CTASection />
       <footer className="py-8 px-6 border-t border-border">
         <div className="container">
           <p className="text-sm text-muted-foreground">
-            © 2026 LinkSplit. All rights reserved.
+            © 2026 GetFifty. All rights reserved.
           </p>
         </div>
       </footer>

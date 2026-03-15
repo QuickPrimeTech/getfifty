@@ -2,20 +2,22 @@
 
 import { motion } from "framer-motion";
 import { useState } from "react";
-import { Check, Copy } from "lucide-react";
+import { Check, Copy, Info, ArrowRight } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import Link from "next/link";
 
 export const LinkCard = () => {
   const [copied, setCopied] = useState(false);
-
+  const link = "link.site/auth/create-account?referrer=xyz";
   const handleCopy = () => {
-    navigator.clipboard.writeText("link.site/ref/user_882");
+    navigator.clipboard.writeText(link);
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
   };
 
   return (
     <section className="py-24 px-4">
-      <div className="container max-w-[55ch]">
+      <div className="container flex flex-col items-center">
         <p className="text-sm font-semibold uppercase tracking-widest text-muted-foreground mb-8">
           Your Dashboard
         </p>
@@ -23,24 +25,28 @@ export const LinkCard = () => {
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+          transition={{
+            duration: 0.4,
+            ease: [0.16, 1, 0.3, 1] as [number, number, number, number],
+          }}
           whileHover={{ y: -4 }}
-          className="p-6 bg-secondary border border-border rounded-[24px] flex flex-col gap-4 shadow-card"
+          className="p-6 w-full max-w-3xl bg-secondary border border-border rounded-[24px] flex flex-col gap-4 shadow-card"
         >
           <div className="flex justify-between items-center">
             <span className="text-sm font-medium text-muted-foreground uppercase tracking-widest">
-              Your Unique Link
+              Sample Link Preview
             </span>
             <div className="h-2 w-2 rounded-full bg-primary animate-pulse" />
           </div>
+
           <div className="p-4 bg-background border border-border rounded-xl flex items-center justify-between gap-4">
-            <code className="text-foreground font-mono text-sm truncate">
-              link.site/ref/user_882
+            <code className="text-foreground font-mono text-sm truncate opacity-60">
+              {link}
             </code>
-            <motion.button
-              whileTap={{ scale: 0.95 }}
+            <Button
+              variant={"outline"}
               onClick={handleCopy}
-              className="bg-foreground text-background px-4 py-2 rounded-lg text-sm font-bold transition-colors flex items-center gap-2 shrink-0"
+              className={"cursor-pointer"}
             >
               {copied ? (
                 <Check className="w-4 h-4" />
@@ -48,8 +54,31 @@ export const LinkCard = () => {
                 <Copy className="w-4 h-4" />
               )}
               {copied ? "Copied" : "Copy"}
-            </motion.button>
+            </Button>
           </div>
+
+          {/* Clear notice that this is just a sample */}
+          <div className="flex items-start gap-3 p-4 bg-primary/5 border border-primary/20 rounded-xl">
+            <Info className="w-5 h-5 text-primary shrink-0 mt-0.5" />
+            <div className="space-y-1">
+              <p className="text-sm font-medium text-foreground">
+                This is just a preview
+              </p>
+              <p className="text-sm text-muted-foreground leading-relaxed">
+                This isn&apos;t your actual referral link. Sign up to get your
+                own unique link and start earning 50/- for every person you
+                refer.
+              </p>
+            </div>
+          </div>
+
+          {/* CTA to sign up */}
+          <Link href="/auth/create-account" className="w-full">
+            <Button className="w-full h-12 bg-primary text-primary-foreground font-bold rounded-full hover:opacity-90 transition-opacity group">
+              Get Your Real Link
+              <ArrowRight className="w-4 h-4 ml-2 transition-transform group-hover:translate-x-1" />
+            </Button>
+          </Link>
         </motion.div>
       </div>
     </section>

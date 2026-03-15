@@ -69,7 +69,7 @@ export const PayoutCalculator = () => {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
-          className="p-8 w-full max-w-md bg-background border border-border rounded-[24px] shadow-card"
+          className="p-8 w-full max-w-3xl bg-background border border-border rounded-[24px] shadow-card"
         >
           <div className="flex flex-col gap-8">
             <div>

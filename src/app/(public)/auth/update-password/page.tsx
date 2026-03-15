@@ -1,4 +1,15 @@
 import { UpdatePasswordForm } from "@/sections/auth/update-password-form";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Update Password - GetFifty",
+  description: "Set a new password for your GetFifty account.",
+  keywords: ["update password", "reset password", "new password"],
+  robots: {
+    index: false,
+    follow: false,
+  },
+};
 
 export default function Page() {
   return (

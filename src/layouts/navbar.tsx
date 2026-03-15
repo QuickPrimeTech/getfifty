@@ -162,12 +162,12 @@ export const Navbar = () => {
 
           <SheetContent
             side="right"
-            className="w-4/5 sm:w-1/2 border-l border-border/50 p-0 flex flex-col rounded-tl-lg gap-0"
+            className="w-4/5 sm:w-1/2 border-l overflow-hidden border-border/50 p-0 flex flex-col rounded-tl-lg gap-0"
           >
             <SheetTitle className="sr-only">Navigation Menu</SheetTitle>
 
             {/* Header */}
-            <div className="flex items-center justify-between p-6 border-b border-border/50">
+            <div className="flex items-center justify-between p-6 border-b border-border/50 rounded-b-2xl">
               <div className="flex items-center gap-2">
                 <Logo size={32} />
                 <span className="text-lg font-heading font-bold">GetFifty</span>

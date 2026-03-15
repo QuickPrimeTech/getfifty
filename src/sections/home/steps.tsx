@@ -29,7 +29,7 @@ const steps = [
 
 export const Steps = () => {
   return (
-    <section className="py-24 px-4 bg-secondary">
+    <section className="py-24 px-4 bg-secondary rounded-3xl">
       <div className="container">
         <motion.p
           initial={{ opacity: 0 }}

@@ -11,7 +11,8 @@ const items = [
 
 export const TrustBar = () => {
   return (
-    <section className="py-12 px-4 border-t border-border">
+    <section className="relative py-12 px-4 border-t border-border">
+      <div className="absolute top-0 left-0 w-full h-0.5 bg-linear-to-r from-purple-500 via-pink-500 to-secondary" />
       <div className="container">
         <div className="flex flex-col md:flex-row gap-6 md:gap-12 justify-center items-start md:items-center">
           {items.map((item, i) => (

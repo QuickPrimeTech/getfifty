@@ -1,6 +1,8 @@
 "use client";
 
+import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
+import { ArrowRight } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -24,14 +26,13 @@ export const CTASection = () => {
               No minimum withdrawal. Paid instantly. Join the network today for
               just 100/-.
             </p>
-            <Link href="/dashboard">
-              <motion.button
-                whileTap={{ y: 2 }}
-                className="h-14 px-8 bg-primary text-primary-foreground font-bold rounded-full text-base transition-colors hover:opacity-90"
-              >
-                Activate for 100/-
-              </motion.button>
-            </Link>
+            <Button
+              size={"xl"}
+              nativeButton={false}
+              render={<Link href="/auth/create-account" />}
+            >
+              Activate for 100/- <ArrowRight />
+            </Button>
           </motion.div>
           <div className="relative flex-1 aspect-3/2">
             <Image

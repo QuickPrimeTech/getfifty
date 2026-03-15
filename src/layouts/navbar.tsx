@@ -37,11 +37,11 @@ const navLinks = [
 ];
 
 const contactInfo = [
-  { icon: Phone, label: "+254 717 448 35", href: "tel:+254717448835" },
+  { icon: Phone, label: "+254 700 000 00", href: "tel:+254700000000" },
   {
     icon: Mail,
-    label: "info@cbcai.com",
-    href: "mailto:info@cbcai.com",
+    label: "info@getfifty.com",
+    href: "mailto:info@getfifty.com",
   },
   { icon: Clock, label: "Active 24/7", href: "#" },
 ];
@@ -117,7 +117,7 @@ export const Navbar = () => {
     <motion.nav
       initial={{ y: -100 }}
       animate={{ y: 0 }}
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 border-b border-border/50 rounded-b-3xl ${
+      className={`fixed top-0 left-0 right-0 font-sans z-50 transition-all duration-300 border-b border-border/50 rounded-b-3xl ${
         scrolled ? "bg-background/80 backdrop-blur-lg" : "bg-transparent"
       }`}
     >
@@ -245,7 +245,7 @@ export const Navbar = () => {
                         <item.icon className="h-5 w-5 text-primary" />
                       </div>
                       <div className="flex-1">
-                        <p className="text-sm font-medium text-primary/80 group-hover:text-primary transition-colors">
+                        <p className="text-sm font-medium text-muted-foreground transition-colors">
                           {item.label}
                         </p>
                       </div>

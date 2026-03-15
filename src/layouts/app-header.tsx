@@ -5,7 +5,7 @@ import { UserMenu } from "./user-menu";
 
 export async function AppHeader() {
   return (
-    <header className="sticky  bg-background top-0 z-50 flex h-(--header-height) shrink-0 items-center gap-2 border-b transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-(--header-height) px-4">
+    <header className="sticky  bg-background top-0 z-50 flex py-3 border-b rounded-br-3xl px-4">
       <div className="flex w-full items-center gap-1 lg:gap-2">
         <SidebarTrigger className="-ml-1" />
         <Separator

@@ -4,6 +4,7 @@ import { motion, type Variants } from "framer-motion";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { Home, ArrowLeft, Search, Sparkles } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 export default function NotFound() {
   const [mounted, setMounted] = useState(false);
@@ -178,16 +179,10 @@ export default function NotFound() {
           variants={itemVariants}
           className="flex flex-col sm:flex-row items-center justify-center gap-4"
         >
-          <Link href="/">
-            <motion.button
-              whileHover={{ scale: 1.02, y: -2 }}
-              whileTap={{ scale: 0.98 }}
-              className="group flex items-center gap-2 h-14 px-8 bg-primary text-primary-foreground font-bold rounded-full text-base transition-all hover:shadow-lg hover:shadow-primary/25"
-            >
-              <Home className="w-5 h-5 transition-transform group-hover:-translate-y-0.5" />
-              Back Home
-            </motion.button>
-          </Link>
+          <Button nativeButton={false} size={"xl"} render={<Link href="/" />}>
+            <Home className="size-5 transition-transform group-hover:-translate-y-0.5" />
+            Back Home
+          </Button>
 
           <motion.button
             whileHover={{ scale: 1.02, y: -2 }}

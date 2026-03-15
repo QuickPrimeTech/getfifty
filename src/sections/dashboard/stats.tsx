@@ -1,8 +1,8 @@
 "use client";
 
-import { cardAnim } from "@/app/(admin)/dashboard/page";
 import { Link2, TrendingUp, Users, Wallet } from "lucide-react";
 import { motion } from "framer-motion";
+import { cardAnim } from "@/lib/animations";
 
 const stats = [
   {

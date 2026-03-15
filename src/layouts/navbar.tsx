@@ -33,6 +33,7 @@ import Logo from "@/components/logo";
 const navLinks = [
   { label: "Home", href: "/" },
   { label: "Calculate Payout", href: "/#calculator" },
+  { label: "Help & Support", href: "/help" },
   { label: "Login", href: "/auth/login" },
 ];
 

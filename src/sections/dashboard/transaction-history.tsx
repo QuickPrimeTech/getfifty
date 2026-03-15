@@ -1,10 +1,10 @@
 "use client";
 
-import { cardAnim } from "@/app/(admin)/dashboard/page";
+import { cardAnim } from "@/lib/animations";
 import { motion } from "framer-motion";
 import { ArrowDownLeft, ArrowUpRight } from "lucide-react";
 
-const transactions = [
+export const transactions = [
   {
     id: 1,
     type: "earning",

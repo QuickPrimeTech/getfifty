@@ -35,13 +35,6 @@ export default function Home() {
       <LinkCard />
       <PayoutCalculator />
       <CTASection />
-      <footer className="py-8 px-6 border-t border-border">
-        <div className="container">
-          <p className="text-sm text-muted-foreground">
-            © 2026 GetFifty. All rights reserved.
-          </p>
-        </div>
-      </footer>
     </div>
   );
 }

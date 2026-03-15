@@ -1,3 +1,4 @@
+import { Footer } from "@/layouts/footer";
 import { Navbar } from "@/layouts/navbar";
 
 export default function RootLayout({
@@ -9,6 +10,7 @@ export default function RootLayout({
     <>
       <Navbar />
       {children}
+      <Footer />
     </>
   );
 }

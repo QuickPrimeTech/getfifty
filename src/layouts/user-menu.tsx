@@ -11,9 +11,10 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { LogoutButton } from "@/sections/auth/logout-button";
-import { User, CreditCard, Settings, AlertCircle } from "lucide-react";
+import { Settings, AlertCircle } from "lucide-react";
 import { useUserQuery } from "@/hooks/use-user";
 import { Skeleton } from "@/components/ui/skeleton";
+import Link from "next/link";
 
 function Content({ children }: React.ComponentProps<"div">) {
   return (
@@ -21,16 +22,12 @@ function Content({ children }: React.ComponentProps<"div">) {
       <DropdownMenuGroup>{children}</DropdownMenuGroup>
       <DropdownMenuSeparator />
       <DropdownMenuGroup>
-        <DropdownMenuItem>
-          <User className="mr-2 h-4 w-4" />
-          Profile
-        </DropdownMenuItem>
-        <DropdownMenuItem>
-          <CreditCard className="mr-2 h-4 w-4" />
-          Billing
-        </DropdownMenuItem>
-        <DropdownMenuItem>
-          <Settings className="mr-2 h-4 w-4" />
+        <DropdownMenuItem
+          nativeButton={false}
+          className={"cursor-pointer"}
+          render={<Link href={"/dashboard/settings"} />}
+        >
+          <Settings className="mr-2 size-4" />
           Settings
         </DropdownMenuItem>
       </DropdownMenuGroup>

@@ -20,14 +20,13 @@ import { useUserQuery } from "@/hooks/use-user";
 import { LogoutButton } from "@/sections/auth/logout-button";
 import {
   EllipsisVerticalIcon,
-  CircleUserRoundIcon,
-  CreditCardIcon,
   LogOutIcon,
   Loader2Icon,
   AlertCircleIcon,
   UserIcon,
   Settings,
 } from "lucide-react";
+import Link from "next/link";
 
 export function NavUser() {
   const { isMobile } = useSidebar();
@@ -195,15 +194,11 @@ export function NavUser() {
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
             <DropdownMenuGroup>
-              <DropdownMenuItem>
-                <CircleUserRoundIcon className="mr-2 size-4" />
-                Account
-              </DropdownMenuItem>
-              <DropdownMenuItem>
-                <CreditCardIcon className="mr-2 size-4" />
-                Billing
-              </DropdownMenuItem>
-              <DropdownMenuItem>
+              <DropdownMenuItem
+                nativeButton={false}
+                className={"cursor-pointer"}
+                render={<Link href={"/dashboard/settings"} />}
+              >
                 <Settings className="mr-2 size-4" />
                 Settings
               </DropdownMenuItem>

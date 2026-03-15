@@ -30,14 +30,14 @@ import { cn } from "@/lib/utils";
 import Logo from "@/components/logo";
 // import { Logo } from "@/components/logo";
 
-const navLinks = [
+export const navLinks = [
   { label: "Home", href: "/" },
   { label: "Calculate Payout", href: "/#calculator" },
   { label: "Help & Support", href: "/help" },
   { label: "Login", href: "/auth/login" },
 ];
 
-const contactInfo = [
+export const contactInfo = [
   { icon: Phone, label: "+254 700 000 00", href: "tel:+254700000000" },
   {
     icon: Mail,

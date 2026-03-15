@@ -59,7 +59,20 @@ export async function updateSession(request: NextRequest) {
   // 3. REDIRECT LOGGED IN USERS: If logged in but hitting /auth pages
   if (user && isAuthRoute) {
     const url = request.nextUrl.clone();
-    url.pathname = "/dashboard";
+
+    // Check if there is a ?next=/path in the URL
+    const nextParam = request.nextUrl.searchParams.get("next");
+
+    if (nextParam) {
+      // If ?next exists, forward them to that specific path
+      url.pathname = nextParam;
+      // Clean up the search param so it doesn't stay in the address bar
+      url.searchParams.delete("next");
+    } else {
+      // Default fallback if no ?next is present
+      url.pathname = "/dashboard";
+    }
+
     return NextResponse.redirect(url);
   }
 

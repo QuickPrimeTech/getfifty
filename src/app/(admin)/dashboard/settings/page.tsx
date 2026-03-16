@@ -17,7 +17,7 @@ export default function SettingsPage() {
           Manage your account preferences.
         </p>
       </div>
-      <SettingsForm />;
+      <SettingsForm />
     </>
   );
 }

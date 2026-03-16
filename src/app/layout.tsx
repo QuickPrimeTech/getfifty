@@ -21,6 +21,7 @@ export const metadata: Metadata = {
   title: "GetFifty - Earn Ksh 50 per referral",
   description:
     "Join GetFifty today and start earning rewards. Refer your friends and get paid Ksh 50 for every successful referral. Fast, simple, and rewarding.",
+  applicationName: "GetFifty",
   verification: {
     google: "svtKqX6-WvwK1_3MBBYLIFz6HNAWrnX6U7VaNZnd2CE",
   },

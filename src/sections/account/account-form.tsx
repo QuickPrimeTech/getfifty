@@ -110,7 +110,7 @@ export const AccountForm = () => {
                   id={field.name}
                   type="tel"
                   aria-invalid={fieldState.invalid}
-                  placeholder="0712345678"
+                  placeholder="0712345678 or +254712345678"
                 />
                 <FieldDescription>
                   Used for your M-Pesa withdrawals.

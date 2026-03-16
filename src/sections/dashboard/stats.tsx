@@ -12,13 +12,13 @@ import { toast } from "sonner";
 const stats = [
   {
     label: "Account Balance",
-    value: "Ksh 312/-",
+    value: "312/-",
     icon: Wallet,
     color: "text-primary",
   },
   {
     label: "Total Earned",
-    value: "Ksh 2,350/-",
+    value: "2,350/-",
     icon: Banknote,
     color: "text-primary",
   },

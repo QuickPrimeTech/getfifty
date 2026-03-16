@@ -3,7 +3,7 @@ import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 import { QueryProvider } from "@/components/providers/tanstack-provider";
 import { AppHeader } from "@/layouts/app-header";
 import { Toaster } from "@/components/ui/sonner";
-import { AlertCircle, CheckCircle2, Info } from "lucide-react";
+import { AlertCircle, AlertTriangle, CheckCircle2, Info } from "lucide-react";
 import { Spinner } from "@/components/ui/spinner";
 import { OnboardingBanner } from "@/sections/onboarding/banner";
 
@@ -42,9 +42,10 @@ export default function DashboardLayout({
             },
           }}
           icons={{
-            success: <CheckCircle2 className="w-4 h-4 text-emerald-500" />,
-            error: <AlertCircle className="w-4 h-4 text-destructive" />,
-            info: <Info className="w-4 h-4 text-blue-500" />,
+            success: <CheckCircle2 className="size-5 text-emerald-500" />,
+            error: <AlertCircle className="size-5 text-destructive" />,
+            warning: <AlertTriangle className="size-5 text-warning" />,
+            info: <Info className="size-5 text-info" />,
             loading: <Spinner />,
           }}
         />

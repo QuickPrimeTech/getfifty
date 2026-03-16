@@ -1,6 +1,4 @@
-import { ReferralCard } from "@/sections/dashboard/referral-card";
-import { Stats } from "@/sections/dashboard/stats";
-import { TransactionHistory } from "@/sections/dashboard/transaction-history";
+import { DashboardContent } from "@/sections/dashboard/dashboard-content";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -25,10 +23,7 @@ export default function Dashboard() {
           Welcome back. Here's your earnings overview.
         </p>
       </div>
-
-      <Stats />
-      <ReferralCard />
-      <TransactionHistory />
+      <DashboardContent />
     </>
   );
 }

@@ -1,6 +1,6 @@
 "use client";
 import { Button } from "@/components/ui/button";
-import { Phone, SendHorizonal, ShieldCheck, Smartphone } from "lucide-react";
+import { Phone, Send, ShieldCheck, Smartphone } from "lucide-react";
 import {
   Dialog,
   DialogContent,
@@ -11,8 +11,9 @@ import { useUserQuery } from "@/hooks/use-user";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import { toast } from "sonner";
 import { useState } from "react";
-import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { useCreateDeposit } from "@/hooks/use-payments";
+import { Spinner } from "@/components/ui/spinner";
 
 export const ActivationDialog = ({
   children,
@@ -20,7 +21,7 @@ export const ActivationDialog = ({
 }: React.ComponentProps<typeof Button>) => {
   const { data: user } = useUserQuery();
   const [isOpen, onOpenChange] = useState(false);
-  const router = useRouter();
+  const depositMutation = useCreateDeposit();
 
   const handleOpen = () => {
     if (!user?.phone) {
@@ -46,6 +47,18 @@ export const ActivationDialog = ({
       return;
     }
     onOpenChange((open) => !open);
+  };
+
+  const handlePayment = () => {
+    if (!user) return;
+    depositMutation.mutate(user, {
+      onSuccess: () => {
+        toast.success(`A payment request has been sent to ${user.phone}`);
+      },
+      onError: (error) => {
+        toast.error(error.response?.data.message);
+      },
+    });
   };
 
   return (
@@ -94,9 +107,23 @@ export const ActivationDialog = ({
               </p>
             </div>
 
-            <Button size={"xl"} className="w-full shadow-xl shadow-primary/10">
-              Confirm & Send Prompt
-              <SendHorizonal />
+            <Button
+              size={"xl"}
+              onClick={handlePayment}
+              className="group w-full shadow-xl shadow-primary/10 cursor-pointer"
+              disabled={depositMutation.isPending}
+            >
+              {depositMutation.isPending ? (
+                <>
+                  <Spinner className={"size-5"} />
+                  Sending Prompt....
+                </>
+              ) : (
+                <>
+                  Confirm & Send Prompt
+                  <Send size={18} className="group-hover:animate-bounce" />
+                </>
+              )}
             </Button>
           </div>
           <ScrollBar orientation="vertical" />

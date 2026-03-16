@@ -1,19 +1,11 @@
 import { createClient } from "@/lib/supabase/client";
+import { Profile } from "@/types/profile";
 import { useQuery } from "@tanstack/react-query";
-
-type UserProfile = {
-  fullName: string;
-  email: string;
-  avatarUrl: string;
-  phone: string | null;
-  referralCode: string | null;
-  id: string;
-};
 
 export function useUserQuery() {
   const supabase = createClient();
 
-  return useQuery<UserProfile>({
+  return useQuery<Profile>({
     queryKey: ["user"],
     queryFn: async () => {
       // 1. Get the current session/user
@@ -37,7 +29,7 @@ export function useUserQuery() {
 
       // 3. Merge Auth Metadata with Database Profile
       return {
-        id: profile?.id || authUser.id,
+        profileId: profile?.id,
         // Preference: Database name > Auth Metadata name
         fullName: profile?.name || authUser.user_metadata?.full_name || "User",
         email: authUser.email || "",
@@ -46,7 +38,5 @@ export function useUserQuery() {
         referralCode: profile?.referral_code || null,
       };
     },
-    // Optional: Keep data fresh but don't over-fetch
-    staleTime: 1000 * 60 * 5,
   });
 }

@@ -9,8 +9,6 @@ import { ActivationCard } from "./activation-card";
 export const DashboardContent = () => {
   const { data: user, isLoading } = useUserQuery();
 
-  console.log("user --------->", user);
-
   if (isLoading) {
     return (
       <div className="flex h-[50vh] items-center justify-center">

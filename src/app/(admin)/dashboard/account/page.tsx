@@ -1,4 +1,4 @@
-import { SettingsForm } from "@/sections/settings/settings-form";
+import { AccountForm } from "@/sections/account/account-form";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -17,7 +17,7 @@ export default function SettingsPage() {
           Manage your account information.
         </p>
       </div>
-      <SettingsForm />
+      <AccountForm />
     </>
   );
 }

@@ -24,7 +24,7 @@ import {
   Loader2Icon,
   AlertCircleIcon,
   UserIcon,
-  Settings,
+  User,
 } from "lucide-react";
 import Link from "next/link";
 
@@ -197,10 +197,10 @@ export function NavUser() {
               <DropdownMenuItem
                 nativeButton={false}
                 className={"cursor-pointer"}
-                render={<Link href={"/dashboard/settings"} />}
+                render={<Link href={"/dashboard/account"} />}
               >
-                <Settings className="mr-2 size-4" />
-                Settings
+                <User className="mr-2 size-4" />
+                Account
               </DropdownMenuItem>
             </DropdownMenuGroup>
             <DropdownMenuSeparator />

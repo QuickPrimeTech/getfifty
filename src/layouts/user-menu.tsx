@@ -11,7 +11,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { LogoutButton } from "@/sections/auth/logout-button";
-import { Settings, AlertCircle } from "lucide-react";
+import { AlertCircle, User } from "lucide-react";
 import { useUserQuery } from "@/hooks/use-user";
 import { Skeleton } from "@/components/ui/skeleton";
 import Link from "next/link";
@@ -25,10 +25,10 @@ function Content({ children }: React.ComponentProps<"div">) {
         <DropdownMenuItem
           nativeButton={false}
           className={"cursor-pointer"}
-          render={<Link href={"/dashboard/settings"} />}
+          render={<Link href={"/dashboard/account"} />}
         >
-          <Settings className="mr-2 size-4" />
-          Settings
+          <User className="mr-2 size-4" />
+          Account
         </DropdownMenuItem>
       </DropdownMenuGroup>
       <DropdownMenuSeparator />

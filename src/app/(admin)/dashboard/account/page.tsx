@@ -2,7 +2,7 @@ import { SettingsForm } from "@/sections/settings/settings-form";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Settings",
+  title: "Account",
   description: "Manage your account preferences.",
 };
 
@@ -11,10 +11,10 @@ export default function SettingsPage() {
     <>
       <div className="mb-8">
         <h1 className="text-2xl md:text-3xl font-extrabold tracking-display">
-          Settings
+          Account
         </h1>
         <p className="text-muted-foreground text-sm mt-1">
-          Manage your account preferences.
+          Manage your account information.
         </p>
       </div>
       <SettingsForm />

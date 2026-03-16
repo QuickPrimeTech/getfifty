@@ -15,12 +15,12 @@ import {
 import {
   LayoutDashboardIcon,
   CircleHelpIcon,
-  Settings,
   Home,
   Link2,
   ArrowUpDown,
   Users,
   Wallet,
+  User,
 } from "lucide-react";
 import Link from "next/link";
 import Logo from "@/components/logo";
@@ -61,9 +61,9 @@ const data = {
       icon: <Home />,
     },
     {
-      title: "Settings",
-      url: "/dashboard/settings",
-      icon: <Settings />,
+      title: "Account",
+      url: "/dashboard/account",
+      icon: <User />,
     },
     {
       title: "Help & Support",

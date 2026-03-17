@@ -12,6 +12,7 @@ export type CallbackResponse = {
   api_ref: string;
   failed_reason: string;
   mpesa_reference: string;
+  challenge: string;
 };
 
 export type STKResponse = {

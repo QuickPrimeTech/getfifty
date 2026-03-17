@@ -19,8 +19,12 @@ export async function POST(request: Request) {
   try {
     const data: CallbackResponse = await request.json();
 
+    //Validate if the post request is legit
+    if (data.challenge !== process.env.PAYMENT_API_SECRET) {
+      return createResponse(403, "The challenge is incorrect");
+    }
     const supabaseAdmin = await createSuperClient();
-
+    console.log("Callback Data ----->", data);
     const status = data.state.toLowerCase();
     const invoiceId = data.invoice_id;
 

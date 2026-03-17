@@ -1,5 +1,7 @@
+import { Spinner } from "@/components/ui/spinner";
 import { LoginForm } from "@/sections/auth/login-form";
 import type { Metadata } from "next";
+import { Suspense } from "react";
 
 export const metadata: Metadata = {
   title: "Login - GetFifty",
@@ -18,7 +20,9 @@ export default function Page() {
   return (
     <div className="flex min-h-svh w-full items-center justify-center p-6 md:p-10">
       <div className="w-full max-w-sm">
-        <LoginForm />
+        <Suspense fallback={<Spinner />}>
+          <LoginForm />
+        </Suspense>
       </div>
     </div>
   );

@@ -1,5 +1,4 @@
 "use client";
-
 import { Button } from "@/components/ui/button";
 import {
   AlertTriangle,
@@ -21,6 +20,7 @@ import { Spinner } from "@/components/ui/spinner";
 import { useCreateDeposit } from "@/hooks/use-payments";
 import { PaymentError } from "./payment-steps/error";
 import { cn } from "@/lib/utils";
+import { PaymentSuccess } from "./payment-steps/success";
 
 export const ActivationDialog = ({
   children,
@@ -66,6 +66,17 @@ export const ActivationDialog = ({
       icon: <AlertTriangle className="size-5 text-white shrink-0" />,
       content: `Reason for failure: ${responseDescription}`,
       className: "bg-destructive border-destructive",
+    },
+    {
+      step: "complete",
+      icon: <CheckCircle className="size-5 text-success-foreground shrink-0" />,
+      content: (
+        <>
+          We have <strong>successfully received</strong> your payment. You will
+          get an email confirming you've signed up.
+        </>
+      ),
+      className: "bg-success border-success text-success-foreground",
     },
   ];
 
@@ -123,6 +134,7 @@ export const ActivationDialog = ({
         <DialogContent className="sm:max-w-106 gap-0 rounded-3xl p-0 overflow-hidden border-none shadow-2xl">
           {paymentStep === "payment" && <Payment />}
           {paymentStep === "processing" && <PaymentPending />}
+          {paymentStep === "complete" && <PaymentSuccess />}
           {paymentStep === "failed" && <PaymentError />}
 
           <ScrollArea className={"h-[50vh]"}>
@@ -153,7 +165,7 @@ export const ActivationDialog = ({
                 {activeStep.icon}
                 <p>{activeStep.content}</p>
               </div>
-              {paymentStep === "payment" && (
+              {(paymentStep === "payment" || paymentStep === "failed") && (
                 <Button
                   size={"xl"}
                   onClick={handlePayment}
@@ -161,15 +173,20 @@ export const ActivationDialog = ({
                   className="group w-full shadow-xl shadow-primary/10 cursor-pointer"
                 >
                   {depositMutation.isPending ? (
-                    <>
+                    <div className="flex items-center gap-2">
                       <Spinner className={"size-5"} />
-                      Sending Prompt....
-                    </>
+                      <span>Sending Prompt....</span>
+                    </div>
                   ) : (
-                    <>
-                      Confirm & Send Prompt
-                      <Send size={18} className="group-hover:animate-bounce" />
-                    </>
+                    <div className="flex items-center gap-2">
+                      {paymentStep === "payment"
+                        ? "Confirm & Send Prompt"
+                        : "Retry Payment"}
+                      <Send
+                        size={18}
+                        className="transition-transform group-hover:translate-x-1 group-hover:-translate-y-1"
+                      />
+                    </div>
                   )}
                 </Button>
               )}

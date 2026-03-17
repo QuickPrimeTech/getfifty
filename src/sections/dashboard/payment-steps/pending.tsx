@@ -32,7 +32,7 @@ export const PaymentPending = () => {
         (payload) => {
           const newStatus = payload.new.status;
 
-          if (newStatus === "completed") {
+          if (newStatus === "complete") {
             setStep("complete");
             toast.success("Payment Received! Account activated.");
           } else if (newStatus === "failed") {

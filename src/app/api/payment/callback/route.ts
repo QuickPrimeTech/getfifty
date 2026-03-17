@@ -7,7 +7,6 @@ export async function POST(request: Request) {
     const data: CallbackResponse = await request.json();
     const supabaseAdmin = await createSuperClient();
 
-    console.log("callback data ------>", data);
     const status = data.state.toLowerCase();
     const invoiceId = data.invoice_id;
 
@@ -39,8 +38,6 @@ export async function POST(request: Request) {
       console.error("Database Update Error:", dbError);
       return createResponse(500, "Database update failed");
     }
-
-    console.log(`Transaction ${invoiceId} updated to ${status}`);
 
     return createResponse(200, "Callback processed successfully");
   } catch (error: any) {

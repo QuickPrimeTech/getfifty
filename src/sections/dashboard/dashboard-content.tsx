@@ -1,6 +1,6 @@
 "use client";
 import { useUserQuery } from "@/hooks/use-user";
-import { ReferralCard } from "./referral-card";
+import { ReferralCard } from "../link/referral-card";
 import { Stats } from "./stats";
 import { TransactionHistory } from "./transaction-history";
 import { Spinner } from "@/components/ui/spinner";

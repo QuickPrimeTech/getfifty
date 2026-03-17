@@ -2,10 +2,12 @@
 import { cardAnim } from "@/lib/animations";
 import { motion } from "framer-motion";
 import { useState } from "react";
-import { Check, Copy, Lock, Share2 } from "lucide-react";
+import { Check, Copy, Lock } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useUserQuery } from "@/hooks/use-user";
 import { Skeleton } from "@/components/ui/skeleton";
+import { ShareButton } from "@/components/ui/share-button";
+import { toast } from "sonner";
 
 export const ReferralCard = () => {
   const [copied, setCopied] = useState(false);
@@ -14,7 +16,7 @@ export const ReferralCard = () => {
   // Construct the dynamic link based on the user's referralCode
   const baseUrl = typeof window !== "undefined" ? window.location.origin : "";
   const referralLink = user?.referralCode
-    ? `${baseUrl}/auth/create-account?ref=${user.referralCode}`
+    ? `${baseUrl}/join/${user.referralCode}`
     : "Link not generated yet";
 
   const handleCopy = async () => {
@@ -97,9 +99,26 @@ export const ReferralCard = () => {
                   </>
                 )}
               </Button>
-              <Button>
-                <Share2 /> Share Link
-              </Button>
+              <ShareButton
+                shareData={{
+                  title: "Join GetFifty",
+                  text: `Join GetFifty program 100/= and start earning 50/= from every person you refer`,
+                  url: referralLink,
+                }}
+                onShareSuccess={() => {
+                  toast.success("Referral link shared successfully!");
+                }}
+                type="button"
+                onShareError={(error) => {
+                  // Only show error if it's not a user cancellation
+                  if (error.name !== "AbortError") {
+                    toast.error("Failed to share referral link");
+                  }
+                }}
+                onCopyFallback={() => {
+                  toast.success("Referral link copied to clipboard!");
+                }}
+              />
             </div>
           </div>
         </div>

@@ -1,4 +1,4 @@
-import { ReferralCard } from "@/sections/dashboard/referral-card";
+import { ReferralCard } from "@/sections/link/referral-card";
 import { History } from "@/sections/link/history";
 import type { Metadata } from "next";
 

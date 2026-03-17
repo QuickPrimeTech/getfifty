@@ -53,7 +53,7 @@ export const AccountForm = () => {
           name: values.fullName,
           phone: values.phone,
         })
-        .eq("id", user?.id);
+        .eq("id", user?.profileId);
 
       if (error) throw error;
 

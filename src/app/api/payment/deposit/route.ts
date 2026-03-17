@@ -76,7 +76,6 @@ export async function POST(
       status: stkResponse.state.toLowerCase(),
     };
 
-    console.log("db data ---->", dbData);
     // 3. Update the Transaction Table (Status set to 'pending')
     const { data: transaction, error: dbError } = await supabase
       .from("transactions")

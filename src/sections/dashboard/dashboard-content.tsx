@@ -5,6 +5,7 @@ import { Stats } from "./stats";
 import { TransactionHistory } from "./transaction-history";
 import { Spinner } from "@/components/ui/spinner";
 import { ActivationCard } from "./activation-card";
+import { QuickActions } from "./quick-actions";
 
 export const DashboardContent = () => {
   const { data: user, isLoading } = useUserQuery();
@@ -27,6 +28,7 @@ export const DashboardContent = () => {
     <>
       <Stats />
       <ReferralCard />
+      <QuickActions />
       <TransactionHistory />
     </>
   );

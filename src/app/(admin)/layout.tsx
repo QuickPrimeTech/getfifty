@@ -6,6 +6,7 @@ import { Toaster } from "@/components/ui/sonner";
 import { AlertCircle, AlertTriangle, CheckCircle2, Info } from "lucide-react";
 import { Spinner } from "@/components/ui/spinner";
 import { OnboardingBanner } from "@/sections/onboarding/banner";
+import { AppBreadcrumb } from "@/layouts/app-breadcrumb";
 
 export default function DashboardLayout({
   children,
@@ -26,6 +27,7 @@ export default function DashboardLayout({
         <SidebarInset>
           <AppHeader />
           <main className="flex-1 space-y-8 p-4">
+            <AppBreadcrumb />
             <OnboardingBanner />
             {children}
           </main>

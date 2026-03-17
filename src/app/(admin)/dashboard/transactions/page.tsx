@@ -12,7 +12,7 @@ import { format } from "date-fns";
 import { useTransactionsQuery } from "@/hooks/use-transactions";
 import { Badge } from "@/components/ui/badge";
 
-type FilterType = "all" | "earning" | "withdrawal" | "deposit";
+type FilterType = "all" | "earning" | "withdrawal";
 
 export default function DashboardTransactions() {
   const [filter, setFilter] = useState<FilterType>("all");
@@ -21,8 +21,7 @@ export default function DashboardTransactions() {
   const { data: transactions = [], isLoading } = useTransactionsQuery();
 
   const filtered = transactions.filter((tx) => {
-    const matchesFilter = filter === "all" || tx.type === filter;
-    // We use 'description' or 'type' since your DB schema might not have 'name'
+    const matchesFilter = filter === "all" || tx.type === filter; // "earning" or "withdrawal"
     const matchesSearch =
       tx.description?.toLowerCase().includes(search.toLowerCase()) ||
       tx.type.toLowerCase().includes(search.toLowerCase());
@@ -33,7 +32,6 @@ export default function DashboardTransactions() {
     { label: "All", value: "all" },
     { label: "Earnings", value: "earning" },
     { label: "Withdrawals", value: "withdrawal" },
-    { label: "Deposits", value: "deposit" },
   ];
 
   return (
@@ -99,14 +97,14 @@ export default function DashboardTransactions() {
                   <div className="flex items-center gap-3">
                     <div
                       className={`w-9 h-9 rounded-xl flex items-center justify-center shrink-0 ${
-                        tx.type === "deposit"
+                        tx.type === "earning"
                           ? "bg-primary/10"
                           : tx.type === "withdrawal"
                             ? "bg-destructive/10"
                             : "bg-blue-500/10"
                       }`}
                     >
-                      {tx.type === "deposit" ? (
+                      {tx.type === "earning" ? (
                         <ArrowDownLeft className="w-4 h-4 text-primary" />
                       ) : (
                         <ArrowUpRight
@@ -126,7 +124,7 @@ export default function DashboardTransactions() {
                   <div className="text-right">
                     <p
                       className={`text-sm font-bold ${
-                        tx.type === "deposit"
+                        tx.type === "earning"
                           ? "text-primary"
                           : tx.type === "withdrawal"
                             ? "text-destructive"

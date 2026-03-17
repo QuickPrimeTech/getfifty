@@ -5,4 +5,5 @@ export type Profile = {
   phone: string | null;
   referralCode: string | null;
   profileId: string;
+  referralClicks: number;
 };

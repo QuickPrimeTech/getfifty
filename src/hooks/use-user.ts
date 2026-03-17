@@ -19,7 +19,7 @@ export function useUserQuery() {
       // 2. Fetch the corresponding profile from the 'profiles' table
       const { data: profile, error: profileError } = await supabase
         .from("profiles")
-        .select("name, phone, referral_code, id")
+        .select("name, phone, referral_code, id, referral_clicks")
         .eq("user_id", authUser.id)
         .single(); // We use .single() because user_id is unique
 
@@ -36,6 +36,7 @@ export function useUserQuery() {
         avatarUrl: authUser.user_metadata?.avatar_url || "",
         phone: profile?.phone || null,
         referralCode: profile?.referral_code || null,
+        referralClicks: profile?.referral_clicks,
       };
     },
   });

@@ -1,35 +1,34 @@
 // @/hooks/use-transactions.ts
-
 import { useQuery } from "@tanstack/react-query";
 import { createClient } from "@/lib/supabase/client";
-import { PaymentStep, PaymentType } from "@/types/payment";
 
 export type Transaction = {
   id: string;
-  invoice_id: string;
+  profile_id: string;
   amount: number;
-  charges: number;
-  status: PaymentStep;
-  type: PaymentType;
-  description: string;
+  type: "earning" | "withdrawal"; // reflect RPC types
+  status: string;
+  description: string | null;
   created_at: string;
 };
 
 export const useTransactionsQuery = () => {
   const supabase = createClient();
 
-  return useQuery({
+  return useQuery<Transaction[]>({
     queryKey: ["transactions"],
-    queryFn: async (): Promise<Transaction[]> => {
+    queryFn: async () => {
+      // Call your RPC that returns both earnings & withdrawals
       const { data, error } = await supabase
-        .from("transactions")
-        .select("*")
-        .eq("status", "complete")
+        .rpc("get_user_transactions") // <- RPC
         .order("created_at", { ascending: false });
 
       if (error) throw new Error(error.message);
 
-      return data as Transaction[];
+      return (data as Transaction[]).sort(
+        (a, b) =>
+          new Date(b.created_at).getTime() - new Date(a.created_at).getTime(),
+      );
     },
   });
 };

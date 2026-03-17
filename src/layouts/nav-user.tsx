@@ -16,17 +16,17 @@ import {
   useSidebar,
 } from "@/components/ui/sidebar";
 import { Skeleton } from "@/components/ui/skeleton";
-import { useUserQuery } from "@/hooks/use-user";
 import { LogoutButton } from "@/sections/auth/logout-button";
-import {
-  EllipsisVerticalIcon,
-  LogOutIcon,
-  Loader2Icon,
-  AlertCircleIcon,
-  UserIcon,
-  User,
-} from "lucide-react";
 import Link from "next/link";
+import { dropdownLinks } from "./user-menu";
+import { useUserQuery } from "@/hooks/use-user";
+import {
+  AlertCircleIcon,
+  EllipsisVerticalIcon,
+  Loader2Icon,
+  LogOutIcon,
+  UserIcon,
+} from "lucide-react";
 
 export function NavUser() {
   const { isMobile } = useSidebar();
@@ -194,14 +194,17 @@ export function NavUser() {
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
             <DropdownMenuGroup>
-              <DropdownMenuItem
-                nativeButton={false}
-                className={"cursor-pointer"}
-                render={<Link href={"/dashboard/account"} />}
-              >
-                <User className="mr-2 size-4" />
-                Account
-              </DropdownMenuItem>
+              {dropdownLinks.map((link) => (
+                <DropdownMenuItem
+                  key={link.label}
+                  nativeButton={false}
+                  className={"cursor-pointer"}
+                  render={<Link href={link.url} />}
+                >
+                  <link.icon className="mr-2 size-4" />
+                  {link.label}
+                </DropdownMenuItem>
+              ))}
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
             <DropdownMenuItem

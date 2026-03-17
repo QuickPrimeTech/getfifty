@@ -5,6 +5,7 @@ import { signInWithOAuth } from "@/app/actions/auth";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { Spinner } from "@/components/ui/spinner";
+import { useSearchParams } from "next/navigation";
 
 type OAuthButtonsProps = {
   onError?: (error: string) => void;
@@ -13,13 +14,16 @@ type OAuthButtonsProps = {
 
 export function OAuthButtons({ onError, disabled }: OAuthButtonsProps) {
   const [isGoogleLoading, setIsGoogleLoading] = useState(false);
+  const searchParams = useSearchParams();
 
   const handleSignIn = async (provider: "google") => {
     if (provider === "google") setIsGoogleLoading(true);
 
     try {
+      // Extract the 'next' param, or default to dashboard/home
+      const next = searchParams.get("next") || "/dashboard";
       // Call Server Action - no props needed!
-      await signInWithOAuth(provider);
+      await signInWithOAuth(provider, next);
       // No need to handle redirect - Server Action does it via `redirect()`
     } catch (error: unknown) {
       const message =

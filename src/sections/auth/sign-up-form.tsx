@@ -1,5 +1,5 @@
 "use client";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
 import { createClient } from "@/lib/supabase/client";
@@ -34,6 +34,7 @@ export function SignUpForm({
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
+  const searchParams = useSearchParams();
 
   const handleSignUp = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -53,13 +54,18 @@ export function SignUpForm({
         .find((c) => c.startsWith("referral_code="))
         ?.split("=")[1];
 
-      console.log("referralCode ------>", referralCode);
+      // Extract the 'next' param, or default to dashboard/home
+      const next = searchParams.get("next") || "/dashboard";
+
+      // 2. Build the redirect URL with the 'next' parameter encoded
+      // This sends the user to /auth/callback (standard) or directly to the dashboard
+      // but keeps the 'next' instruction alive.
 
       const { error } = await supabase.auth.signUp({
         email,
         password,
         options: {
-          emailRedirectTo: `${window.location.origin}/dashboard`,
+          emailRedirectTo: `${window.location.origin}/auth/callback?next=${next}`,
           data: {
             referral_code: referralCode, // <-- this will be visible in raw_user_meta_data
           },

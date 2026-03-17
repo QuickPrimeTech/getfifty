@@ -6,7 +6,10 @@ import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 
 // Server Action can read env vars directly!
-export async function signInWithOAuth(provider: "google" | "facebook") {
+export async function signInWithOAuth(
+  provider: "google" | "facebook",
+  next?: string,
+) {
   const supabase = await createClient();
 
   const cookieStore = await cookies();
@@ -22,9 +25,12 @@ export async function signInWithOAuth(provider: "google" | "facebook") {
   const cleanBaseUrl = siteUrl.endsWith("/") ? siteUrl.slice(0, -1) : siteUrl;
 
   // Pass referral via query param to callback
-  const redirectTo = `${cleanBaseUrl}/auth/callback${
-    referralCode ? `?ref=${referralCode}` : ""
-  }`;
+  const redirectTo = `${cleanBaseUrl}/auth/callback?${[
+    referralCode && `ref=${referralCode}`,
+    next && `next=${encodeURIComponent(next)}`,
+  ]
+    .filter(Boolean)
+    .join("&")}`;
 
   console.log("Server Action - Redirect URL:", redirectTo);
 

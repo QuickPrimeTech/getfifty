@@ -1,4 +1,5 @@
 export type PaymentStep = "payment" | "processing" | "failed" | "complete";
+export type PaymentType = "deposit" | "withdrawal" | "referral_bonus";
 export type CallbackResponse = {
   invoice_id: "YV5J98Y";
   state: "PENDING" | "PROCESSING" | "FAILED" | "COMPLETE";

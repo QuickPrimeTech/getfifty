@@ -1,7 +1,5 @@
-export type Params = {
-  params: Promise<{
-    id: string;
-  }>;
+export type Params<T> = {
+  params: Promise<T>;
 };
 
 export type ApiResponse<T = null> = {

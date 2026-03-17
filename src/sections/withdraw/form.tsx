@@ -23,11 +23,11 @@ import {
 import { Input } from "@/components/ui/input";
 import { useState } from "react";
 import { Spinner } from "@/components/ui/spinner";
+import { useDashboardStats } from "@/hooks/use-dashboard-stats";
+import { useUserQuery } from "@/hooks/use-user";
+import { Skeleton } from "@/components/ui/skeleton";
 
-// Available balance (in a real app, fetch this from your API)
-const AVAILABLE_BALANCE = 2350;
-
-// Static schema without factory function
+// Static schema
 const withdrawSchema = z.object({
   amount: z
     .string()
@@ -47,34 +47,37 @@ type WithdrawFormValues = z.infer<typeof withdrawSchema>;
 
 export const WithdrawalForm = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const { data, isLoading } = useDashboardStats();
+  const { data: user, isLoading: isUserLoading } = useUserQuery();
 
   const form = useForm<WithdrawFormValues>({
     resolver: zodResolver(withdrawSchema),
     defaultValues: {
       amount: "",
-      phone: "",
+      phone: user?.phone || "",
     },
   });
 
-  async function onSubmit(data: WithdrawFormValues) {
-    const amount = Number(data.amount);
+  async function onSubmit(values: WithdrawFormValues) {
+    const amount = Number(values.amount);
 
-    // Check balance limit manually
-    if (amount > AVAILABLE_BALANCE) {
+    if (!data) return; // safety check
+
+    // Check balance
+    if (amount > data.balance) {
       toast.error("Insufficient balance", {
-        description: `Cannot withdraw more than ${AVAILABLE_BALANCE.toLocaleString()}/-`,
-        position: "bottom-right",
+        description: `Cannot withdraw more than ${data.balance.toLocaleString()}/-`,
       });
       return;
     }
 
     setIsSubmitting(true);
 
-    // Simulate API call
+    // Simulate API
     await new Promise((resolve) => setTimeout(resolve, 1000));
 
     toast("Withdrawal request submitted", {
-      description: `KES ${amount.toLocaleString()} will be sent to ${data.phone}`,
+      description: `KES ${amount.toLocaleString()} will be sent to ${values.phone}`,
       position: "bottom-right",
     });
 
@@ -94,9 +97,14 @@ export const WithdrawalForm = () => {
               <CardDescription className="text-xs text-muted-foreground uppercase tracking-widest">
                 Available Balance
               </CardDescription>
-              <CardTitle className="payout-text text-2xl font-extrabold text-primary">
-                {AVAILABLE_BALANCE.toLocaleString()}/-
-              </CardTitle>
+              {isLoading ? (
+                // Skeleton
+                <div className="h-8 w-24 bg-muted rounded animate-pulse" />
+              ) : (
+                <CardTitle className="payout-text text-2xl font-extrabold text-primary">
+                  {data?.balance.toLocaleString()}/-
+                </CardTitle>
+              )}
             </div>
           </div>
         </CardHeader>
@@ -119,7 +127,12 @@ export const WithdrawalForm = () => {
                       aria-invalid={fieldState.invalid}
                     />
                     <FieldDescription>
-                      Maximum withdrawal: {AVAILABLE_BALANCE.toLocaleString()}
+                      Maximum withdrawal:{" "}
+                      {isLoading ? (
+                        <span className="inline-block w-12 h-3 bg-muted rounded animate-pulse" />
+                      ) : (
+                        data?.balance.toLocaleString()
+                      )}
                       /-
                     </FieldDescription>
                     {fieldState.invalid && (
@@ -136,13 +149,17 @@ export const WithdrawalForm = () => {
                     <FieldLabel htmlFor="withdraw-phone">
                       M-Pesa Number
                     </FieldLabel>
-                    <Input
-                      {...field}
-                      id="withdraw-phone"
-                      type="tel"
-                      placeholder="e.g. 0712345678"
-                      aria-invalid={fieldState.invalid}
-                    />
+                    {isUserLoading ? (
+                      <Skeleton className="h-7" />
+                    ) : (
+                      <Input
+                        {...field}
+                        id="withdraw-phone"
+                        type="tel"
+                        placeholder="e.g. 0712345678"
+                        aria-invalid={fieldState.invalid}
+                      />
+                    )}
                     <FieldDescription>
                       Enter the M-Pesa number to receive the funds
                     </FieldDescription>
@@ -158,12 +175,12 @@ export const WithdrawalForm = () => {
         <div className="px-6 pb-6">
           <Button
             type="submit"
-            size={"xl"}
-            className={"w-full"}
+            size="xl"
+            className="w-full"
             form="withdraw-form"
-            disabled={isSubmitting}
+            disabled={isSubmitting || isLoading}
           >
-            {isSubmitting && <Spinner />}
+            {isSubmitting && <Spinner className="mr-2" />}
             Withdraw to M-Pesa
           </Button>
         </div>

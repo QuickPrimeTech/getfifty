@@ -5,14 +5,22 @@ export async function GET(request: Request) {
   const { searchParams, origin } = new URL(request.url);
   const code = searchParams.get("code");
   const next = searchParams.get("next") ?? "/dashboard";
+  const ref = searchParams.get("ref"); // from redirectTo
 
   if (code) {
     const supabase = await createClient();
-    const { error } = await supabase.auth.exchangeCodeForSession(code);
-    if (!error) {
+    const { data, error } = await supabase.auth.exchangeCodeForSession(code);
+    if (!error && data?.user) {
+      if (ref) {
+        await supabase
+          .from("profiles")
+          .update({ referred_by_code: ref })
+          .eq("user_id", data.user.id);
+      }
+
       return NextResponse.redirect(`${origin}${next}`);
     }
   }
 
-  return NextResponse.redirect(`${origin}/auth/auth-code-error`);
+  return NextResponse.redirect(`${origin}/auth/error`);
 }

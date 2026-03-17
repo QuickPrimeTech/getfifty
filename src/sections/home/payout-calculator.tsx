@@ -124,7 +124,7 @@ export const PayoutCalculator = () => {
                   nativeButton={false}
                   className={"flex-1 max-w-sm"}
                   size={"xl"}
-                  render={<Link href={"/dashboard/create-account"} />}
+                  render={<Link href={"/auth/create-account"} />}
                 >
                   <PartyPopper />
                   Start Earning

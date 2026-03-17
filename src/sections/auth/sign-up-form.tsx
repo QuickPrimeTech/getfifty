@@ -33,8 +33,6 @@ export function SignUpForm({
   const [showRepeatPassword, setShowRepeatPassword] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
-  const [isGoogleLoading, setIsGoogleLoading] = useState(false);
-  const [isFacebookLoading, setIsFacebookLoading] = useState(false);
   const router = useRouter();
 
   const handleSignUp = async (e: React.FormEvent) => {
@@ -50,11 +48,21 @@ export function SignUpForm({
     }
 
     try {
+      const referralCode = document.cookie
+        .split("; ")
+        .find((c) => c.startsWith("referral_code="))
+        ?.split("=")[1];
+
+      console.log("referralCode ------>", referralCode);
+
       const { error } = await supabase.auth.signUp({
         email,
         password,
         options: {
           emailRedirectTo: `${window.location.origin}/dashboard`,
+          data: {
+            referral_code: referralCode, // <-- this will be visible in raw_user_meta_data
+          },
         },
       });
       if (error) throw error;
@@ -63,32 +71,6 @@ export function SignUpForm({
       setError(error instanceof Error ? error.message : "An error occurred");
     } finally {
       setIsLoading(false);
-    }
-  };
-
-  const signInWithOAuth = async (provider: "google" | "facebook") => {
-    const supabase = createClient();
-    setError(null);
-
-    if (provider === "google") setIsGoogleLoading(true);
-    if (provider === "facebook") setIsFacebookLoading(true);
-
-    try {
-      const { error } = await supabase.auth.signInWithOAuth({
-        provider,
-        options: {
-          redirectTo: `${window.location.origin}/auth/callback`,
-        },
-      });
-      if (error) throw error;
-    } catch (error: unknown) {
-      setError(
-        error instanceof Error
-          ? error.message
-          : `Failed to sign in with ${provider}`,
-      );
-      if (provider === "google") setIsGoogleLoading(false);
-      if (provider === "facebook") setIsFacebookLoading(false);
     }
   };
 
@@ -185,11 +167,7 @@ export function SignUpForm({
                   </InputGroup>
                 </div>
                 {error && <p className="text-sm text-red-500">{error}</p>}
-                <Button
-                  type="submit"
-                  className="w-full"
-                  disabled={isLoading || isGoogleLoading || isFacebookLoading}
-                >
+                <Button type="submit" className="w-full" disabled={isLoading}>
                   {isLoading ? "Creating an account..." : "Create account"}
                 </Button>
               </div>

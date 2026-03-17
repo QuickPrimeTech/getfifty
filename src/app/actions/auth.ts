@@ -2,11 +2,15 @@
 "use server";
 
 import { createClient } from "@/lib/supabase/server";
+import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 
 // Server Action can read env vars directly!
 export async function signInWithOAuth(provider: "google" | "facebook") {
   const supabase = await createClient();
+
+  const cookieStore = await cookies();
+  const referralCode = cookieStore.get("referral_code")?.value;
 
   // Read env vars on server - works perfectly!
   const siteUrl =
@@ -16,7 +20,11 @@ export async function signInWithOAuth(provider: "google" | "facebook") {
 
   // Ensure https and no trailing slash
   const cleanBaseUrl = siteUrl.endsWith("/") ? siteUrl.slice(0, -1) : siteUrl;
-  const redirectTo = `${cleanBaseUrl}/auth/callback`;
+
+  // Pass referral via query param to callback
+  const redirectTo = `${cleanBaseUrl}/auth/callback${
+    referralCode ? `?ref=${referralCode}` : ""
+  }`;
 
   console.log("Server Action - Redirect URL:", redirectTo);
 

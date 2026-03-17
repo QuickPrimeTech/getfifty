@@ -1,46 +1,17 @@
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import ErrorContent from "@/sections/auth/error-content";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "Error - GetFifty",
-  description:
-    "Something went wrong. Please try again or contact support if the problem persists.",
-  robots: {
-    index: false,
-    follow: false,
-  },
+  description: "Something went wrong. Please try again or contact support.",
+  robots: { index: false, follow: false },
 };
 
-export default async function Page({
-  searchParams,
-}: {
-  searchParams: Promise<{ error: string }>;
-}) {
-  const params = await searchParams;
-
+export default function ErrorPage() {
   return (
-    <div className="flex min-h-svh w-full items-center justify-center p-6 md:p-10">
+    <div className="flex min-h-svh w-full items-center justify-center pt-20 bg-secondary/30">
       <div className="w-full max-w-sm">
-        <div className="flex flex-col gap-6">
-          <Card>
-            <CardHeader>
-              <CardTitle className="text-2xl">
-                Sorry, something went wrong.
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              {params?.error ? (
-                <p className="text-sm text-muted-foreground">
-                  Code error: {params.error}
-                </p>
-              ) : (
-                <p className="text-sm text-muted-foreground">
-                  An unspecified error occurred.
-                </p>
-              )}
-            </CardContent>
-          </Card>
-        </div>
+        <ErrorContent />
       </div>
     </div>
   );

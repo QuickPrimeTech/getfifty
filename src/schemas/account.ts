@@ -6,7 +6,7 @@ export const accountSchema = z.object({
     .string()
     .regex(
       /^(?:254|\+254|0)?(7|1)(?:(?:[0-9][0-9])|(?:0[0-3]))[0-9]{6}$/,
-      "Enter a valid Safaricom/Airtel number",
+      "Enter a valid Safaricom number",
     ),
   email: z.string().email("Invalid email address"),
 });

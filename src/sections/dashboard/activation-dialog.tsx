@@ -72,8 +72,19 @@ export const ActivationDialog = ({
       icon: <CheckCircle className="size-5 text-success-foreground shrink-0" />,
       content: (
         <>
-          We have <strong>successfully received</strong> your payment. You will
-          get an email confirming you've signed up.
+          <span>
+            We have <strong>successfully received</strong> your payment. You
+            will get an email confirming you've signed up.
+          </span>
+          <Button
+            title="Close dialog"
+            onClick={() => onOpenChange(() => false)}
+            size={"sm"}
+            variant={"secondary"}
+            className={"mt-3"}
+          >
+            Close
+          </Button>
         </>
       ),
       className: "bg-success border-success text-success-foreground",

@@ -5,6 +5,7 @@ import { createSuperClient } from "@/lib/supabase/admin";
 export async function POST(request: Request) {
   try {
     const data: CallbackResponse = await request.json();
+
     const supabaseAdmin = await createSuperClient();
 
     const status = data.state.toLowerCase();

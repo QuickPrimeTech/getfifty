@@ -89,8 +89,8 @@ export const ReferralCard = () => {
               >
                 {copied ? (
                   <>
-                    <Check className="w-4 h-4 text-emerald-400" />
-                    <span className="text-emerald-400">Copied</span>
+                    <Check />
+                    Copied
                   </>
                 ) : (
                   <>

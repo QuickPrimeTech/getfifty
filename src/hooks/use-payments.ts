@@ -1,11 +1,12 @@
 import { ApiResponse } from "@/types/api";
+import { CallbackResponse } from "@/types/payment";
 import { Profile } from "@/types/profile";
 import { useMutation } from "@tanstack/react-query";
 import axios, { AxiosError } from "axios";
 
 export function useCreateDeposit() {
   return useMutation<
-    ApiResponse<Profile>,
+    ApiResponse<CallbackResponse>,
     AxiosError<ApiResponse<null>>,
     Profile
   >({

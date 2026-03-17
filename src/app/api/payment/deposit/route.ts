@@ -6,6 +6,7 @@ import { createClient } from "@/lib/supabase/server";
 import { ApiResponse } from "@/types/api";
 import { Profile } from "@/types/profile";
 import { createResponse } from "@/utils/api";
+import { STKResponse } from "@/types/payment";
 
 // Initialize IntaSend outside the handler so it's cached
 const intasend = new IntaSend(
@@ -22,36 +23,42 @@ export async function POST(
   try {
     // 1. Parse the incoming request body
     const user: Profile = await request.json();
+    const amount = 1;
 
-    console.log("user ------->", user);
     if (!user.profileId || !user.phone) {
       return createResponse(400, "Missing phone number or user info");
     }
 
     // 2. Trigger the IntaSend M-Pesa STK Push
     const collection = intasend.collection();
-    const stkResponse = await collection.mpesaStkPush({
-      first_name: user.fullName, // Can be dynamic if you pass it in the body
-      last_name: "Deposit",
-      email: user.email, // Optional but recommended
-      host: "https://quickprimetech.com", // Replace with your actual domain
-      amount: 100,
-      phone_number: user.phone,
-      api_ref: user.profileId, // Great way to tie the Intasend webhook back to the user
-    });
+    const { invoice: stkResponse }: STKResponse = await collection.mpesaStkPush(
+      {
+        first_name: user.fullName, // Can be dynamic if you pass it in the body
+        last_name: "Deposit",
+        email: user.email, // Optional but recommended
+        host: "https://quickprimetech.com", // Replace with your actual domain
+        amount,
+        phone_number: user.phone,
+        api_ref: user.profileId, // Great way to tie the Intasend webhook back to the user
+      },
+    );
 
+    const dbData = {
+      invoice_id: stkResponse.invoice_id,
+      profile_id: user.profileId,
+      amount,
+      type: "deposit", // NOTE: You must update your SQL check constraint to allow this!
+      status: stkResponse.state.toLowerCase(),
+    };
+
+    console.log("db data ---->", dbData);
     // 3. Update the Transaction Table (Status set to 'pending')
     const { data: transaction, error: dbError } = await supabase
       .from("transactions")
-      .insert([
-        {
-          profile_id: user.profileId,
-          amount: 100,
-          type: "deposit", // NOTE: You must update your SQL check constraint to allow this!
-          status: "pending",
-          description: `STK Push initiated to ${user.phone}`,
-        },
-      ])
+      .upsert(dbData, {
+        onConflict: "invoice_id",
+        ignoreDuplicates: true, // <--- THIS PREVENTS INSERT CONFLICT
+      })
       .select()
       .single();
 
@@ -59,7 +66,6 @@ export async function POST(
       console.error("Database Error:", dbError);
       return createResponse(500, "Failed to log transaction");
     }
-    console.log("stkResponse ---->", stkResponse);
 
     return createResponse(200, "STK Push sent successfully", transaction);
   } catch (error: any) {

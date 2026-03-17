@@ -3,7 +3,7 @@ import { motion } from "framer-motion";
 
 export const ReferralStats = () => {
   return (
-    <div className="grid grid-cols-2 gap-4 mb-8">
+    <div className="grid grid-cols-2 gap-4">
       <motion.div
         initial={{ opacity: 0, y: 16 }}
         animate={{ opacity: 1, y: 0 }}

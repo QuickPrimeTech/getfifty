@@ -1,5 +1,5 @@
+import { ReferralCard } from "@/sections/dashboard/referral-card";
 import { History } from "@/sections/link/history";
-import { ShareLink } from "@/sections/link/share-link";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -21,7 +21,7 @@ export const metadata: Metadata = {
 export default function DashboardLink() {
   return (
     <>
-      <div className="mb-8">
+      <div>
         <h1 className="text-2xl md:text-3xl font-extrabold tracking-display">
           My Link
         </h1>
@@ -29,7 +29,7 @@ export default function DashboardLink() {
           Share your unique link to start earning.
         </p>
       </div>
-      <ShareLink />
+      <ReferralCard />
       <History />
     </>
   );

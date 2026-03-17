@@ -6,6 +6,7 @@ import { usePaymentStore } from "@/stores/use-payment-store";
 import { DialogDescription, DialogTitle } from "@/components/ui/dialog";
 import { CheckCircle, Loader, Smartphone } from "lucide-react";
 import { toast } from "sonner";
+import { useQueryClient } from "@tanstack/react-query";
 
 export const PaymentPending = () => {
   const supabase = createClient();
@@ -14,6 +15,7 @@ export const PaymentPending = () => {
   const setResponseDescription = usePaymentStore(
     (state) => state.setResponseDescription,
   );
+  const queryClient = useQueryClient();
 
   useEffect(() => {
     if (!invoiceId) return;
@@ -29,11 +31,12 @@ export const PaymentPending = () => {
           table: "transactions",
           filter: `invoice_id=eq.${invoiceId}`,
         },
-        (payload) => {
+        async (payload) => {
           const newStatus = payload.new.status;
 
           if (newStatus === "complete") {
             setStep("complete");
+            await queryClient.invalidateQueries({ queryKey: ["user"] });
             toast.success("Payment Received! Account activated.");
           } else if (newStatus === "failed") {
             setStep("failed");

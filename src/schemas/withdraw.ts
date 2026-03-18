@@ -1,20 +1,33 @@
 // @/schemas/withdraw.ts
 import * as z from "zod";
 
-export const withdrawSchema = z.object({
-  amount: z
-    .string()
-    .min(1, "Amount is required")
-    .refine((val) => !isNaN(Number(val)), "Must be a valid number")
-    // Updated logic for 10/- minimum
-    .refine((val) => Number(val) >= 10, "Minimum withdrawal is KES 10/-"),
-  phone: z
-    .string()
-    .min(1, "Phone number is required")
-    .refine(
-      (val) => /^0[0-9]{9}$/.test(val) || /^[0-9]{9}$/.test(val),
-      "Enter a valid Kenyan phone number (e.g. 0712345678)",
-    ),
-});
+export const getWithdrawSchema = (maxAmount?: number) =>
+  z.object({
+    amount: z
+      .string()
+      .min(1, "Amount is required")
+      .refine((val) => !isNaN(Number(val)), "Must be a valid number")
+      .refine((val) => Number(val) >= 50, "Minimum withdrawal is KES 50/-")
+      // Check if maxAmount exists. If not, return true (valid).
+      .refine(
+        (val) => {
+          if (maxAmount === undefined) return true;
+          return Number(val) <= maxAmount;
+        },
+        {
+          // We use a static string here, or an interpolated one since
+          // maxAmount is available in the closure of the outer function.
+          message: maxAmount
+            ? `Maximum withdrawable is KES ${Math.floor(maxAmount).toLocaleString()}/-`
+            : "Exceeds balance",
+        },
+      ),
+    phone: z
+      .string()
+      .regex(
+        /^(?:254|\+254|0)?(7|1)(?:(?:[0-9][0-9])|(?:0[0-3]))[0-9]{6}$/,
+        "Enter a valid Safaricom number",
+      ),
+  });
 
-export type WithdrawFormValues = z.infer<typeof withdrawSchema>;
+export type WithdrawFormValues = z.infer<ReturnType<typeof getWithdrawSchema>>;

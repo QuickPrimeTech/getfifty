@@ -20,20 +20,24 @@ import {
   FieldLabel,
 } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { Spinner } from "@/components/ui/spinner";
 import { useDashboardStats } from "@/hooks/use-dashboard-stats";
 import { useUserQuery } from "@/hooks/use-user";
 import { useInvestorStatQuery } from "@/hooks/use-investor-stat";
 import { Skeleton } from "@/components/ui/skeleton";
-import { WithdrawFormValues, withdrawSchema } from "@/schemas/withdraw";
+import { getWithdrawSchema, WithdrawFormValues } from "@/schemas/withdraw";
+import { useQueryClient } from "@tanstack/react-query";
+import { TransactionStatus } from "./transaction-status";
 
 export const WithdrawalForm = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [activeTxId, setActiveTxId] = useState(null);
   const { data, isLoading: isStatsLoading } = useDashboardStats();
   const { data: user, isLoading: isUserLoading } = useUserQuery();
   const { data: investorData, isLoading: isInvestorLoading } =
     useInvestorStatQuery();
+  const queryClient = useQueryClient();
 
   // 1. Determine if they are actually an investor (pct > 0)
   const isActualInvestor = !!(
@@ -50,38 +54,63 @@ export const WithdrawalForm = () => {
 
   const isLoading = isStatsLoading || isInvestorLoading;
 
+  const defaultValues = {
+    amount: "",
+    phone: "",
+  };
   const form = useForm<WithdrawFormValues>({
-    resolver: zodResolver(withdrawSchema),
-    defaultValues: {
-      amount: "",
-      phone: user?.phone || "",
-    },
+    resolver: zodResolver(getWithdrawSchema(totalWithdrawable)),
+    defaultValues,
   });
 
-  async function onSubmit(values: WithdrawFormValues) {
-    const amount = Number(values.amount);
-
-    if (amount > totalWithdrawable) {
-      toast.error("Insufficient balance", {
-        description: `Your withdrawable amount is KES ${totalWithdrawable.toLocaleString()}/-`,
+  // ADD THIS EFFECT:
+  useEffect(() => {
+    if (user?.phone) {
+      // This manually pushes the phone number into the form field once loaded
+      form.setValue("phone", user.phone, {
+        shouldValidate: true,
+        shouldDirty: false, // Keeps the form from thinking the user "touched" it
       });
-      return;
     }
+  }, [user?.phone, form]);
 
+  async function onSubmit(values: WithdrawFormValues) {
     setIsSubmitting(true);
-    // Simulate API call
-    await new Promise((resolve) => setTimeout(resolve, 1000));
 
-    toast.success("Withdrawal request submitted", {
-      description: `KES ${amount.toLocaleString()} will be sent to ${values.phone}`,
-    });
+    try {
+      const response = await fetch("/api/payment/withdraw", {
+        method: "POST",
+        body: JSON.stringify(values),
+      });
 
-    form.reset();
-    setIsSubmitting(false);
+      const result = await response.json(); // This is the ApiResponse<T>
+
+      if (result.success) {
+        toast.success("Request Sent", { description: result.message });
+        form.reset(defaultValues);
+        setActiveTxId(() => result.data.id);
+        // 2. Refetch all dashboard and user data to show the new balance
+        await queryClient.invalidateQueries();
+      } else {
+        // Handles 400, 402, and 500 errors
+        toast.error("Withdrawal Error", { description: result.message });
+      }
+    } catch (err) {
+      toast.error("Network Error", {
+        description: "Could not reach the server.",
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
   }
 
   return (
     <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }}>
+      {activeTxId && (
+        <div className="mb-4">
+          <TransactionStatus transactionId={activeTxId} />
+        </div>
+      )}
       <Card>
         <CardHeader>
           <div className="flex items-center gap-3">
@@ -125,7 +154,10 @@ export const WithdrawalForm = () => {
                     />
                     <FieldDescription>
                       Max:{" "}
-                      {isLoading ? "..." : totalWithdrawable.toLocaleString()}/-
+                      {isLoading
+                        ? "..."
+                        : Math.floor(totalWithdrawable).toLocaleString()}
+                      /-
                       {isActualInvestor && (
                         <span className="ml-1 text-[10px] text-emerald-600 font-medium">
                           (Bonus included)

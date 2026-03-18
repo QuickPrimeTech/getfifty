@@ -1,35 +1,14 @@
 //@/app/api/payment/deposit/route.ts
 
 import { NextResponse } from "next/server";
-import IntaSend from "intasend-node";
 import { createClient } from "@/lib/supabase/server";
 import { ApiResponse } from "@/types/api";
 import { Profile } from "@/types/profile";
 import { createResponse } from "@/utils/api";
 import { STKResponse } from "@/types/payment";
 import { accountSchema } from "@/schemas/account";
-
-// Initialize IntaSend outside the handler so it's cached
-const intasend = new IntaSend(
-  process.env.NEXT_PUBLIC_INTASEND_PUBLISHABLE_KEY,
-  process.env.INTASEND_SECRET_KEY,
-  process.env.NODE_ENV !== "production", // Evaluates to true in local dev, false in prod
-);
-
-/**
- * Sanitizes Kenyan phone numbers to the 254... format
- */
-const sanitizePhoneNumber = (phone: string): string => {
-  let cleaned = phone.replace(/\D/g, ""); // Remove all non-digits (handles +)
-
-  if (cleaned.startsWith("0")) {
-    cleaned = "254" + cleaned.slice(1);
-  } else if (cleaned.startsWith("7") || cleaned.startsWith("1")) {
-    cleaned = "254" + cleaned;
-  }
-  // If it already starts with 254, it stays as is
-  return cleaned;
-};
+import { sanitizePhoneNumber } from "@/utils/formatters";
+import { intasend } from "@/lib/intasend/server";
 
 export async function POST(
   request: Request,

@@ -108,7 +108,7 @@ export const Stats = () => {
                 >
                   {/* Handle 0 properly and format to whole Shillings */}
                   {stat.value !== undefined && stat.value !== null
-                    ? Math.floor(Number(stat.value)).toLocaleString()
+                    ? Number(stat.value).toLocaleString()
                     : 0}
                 </p>
               )}

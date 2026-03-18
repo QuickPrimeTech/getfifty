@@ -18,11 +18,6 @@ import Link from "next/link";
 
 export const dropdownLinks = [
   {
-    label: "Account",
-    icon: User,
-    url: "/dashboard/account",
-  },
-  {
     label: "Withdraw",
     icon: Wallet,
     url: "/dashboard/withdraw",
@@ -31,6 +26,11 @@ export const dropdownLinks = [
     label: "My Transactions",
     icon: ArrowUpDown,
     url: "/dashboard/transactions",
+  },
+  {
+    label: "Account",
+    icon: User,
+    url: "/dashboard/account",
   },
 ];
 

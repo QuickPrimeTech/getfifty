@@ -2,7 +2,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Controller, useForm } from "react-hook-form";
 import { motion } from "framer-motion";
-import { Wallet } from "lucide-react";
+import { Wallet, TrendingUp } from "lucide-react";
 import * as z from "zod";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
@@ -21,13 +21,13 @@ import {
   FieldLabel,
 } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { Spinner } from "@/components/ui/spinner";
 import { useDashboardStats } from "@/hooks/use-dashboard-stats";
 import { useUserQuery } from "@/hooks/use-user";
+import { useInvestorStatQuery } from "@/hooks/use-investor-stat";
 import { Skeleton } from "@/components/ui/skeleton";
 
-// Static schema
 const withdrawSchema = z.object({
   amount: z
     .string()
@@ -47,8 +47,25 @@ type WithdrawFormValues = z.infer<typeof withdrawSchema>;
 
 export const WithdrawalForm = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const { data, isLoading } = useDashboardStats();
+  const { data, isLoading: isStatsLoading } = useDashboardStats();
   const { data: user, isLoading: isUserLoading } = useUserQuery();
+  const { data: investorData, isLoading: isInvestorLoading } =
+    useInvestorStatQuery();
+
+  // 1. Determine if they are actually an investor (pct > 0)
+  const isActualInvestor = !!(
+    investorData && investorData.investor_percentage > 0
+  );
+
+  // 2. Calculate Combined Total (Whole numbers only)
+  const totalWithdrawable = useMemo(() => {
+    const balance = data?.balance || 0;
+    const bonus = isActualInvestor ? investorData?.expected_bonus_net || 0 : 0;
+    // Floor it so 0.5 becomes 0 (can't withdraw cents)
+    return balance + bonus;
+  }, [data?.balance, investorData?.expected_bonus_net, isActualInvestor]);
+
+  const isLoading = isStatsLoading || isInvestorLoading;
 
   const form = useForm<WithdrawFormValues>({
     resolver: zodResolver(withdrawSchema),
@@ -61,24 +78,19 @@ export const WithdrawalForm = () => {
   async function onSubmit(values: WithdrawFormValues) {
     const amount = Number(values.amount);
 
-    if (!data) return; // safety check
-
-    // Check balance
-    if (amount > data.balance) {
+    if (amount > totalWithdrawable) {
       toast.error("Insufficient balance", {
-        description: `Cannot withdraw more than ${data.balance.toLocaleString()}/-`,
+        description: `Your withdrawable amount is KES ${totalWithdrawable.toLocaleString()}/-`,
       });
       return;
     }
 
     setIsSubmitting(true);
-
-    // Simulate API
+    // Simulate API call
     await new Promise((resolve) => setTimeout(resolve, 1000));
 
-    toast("Withdrawal request submitted", {
+    toast.success("Withdrawal request submitted", {
       description: `KES ${amount.toLocaleString()} will be sent to ${values.phone}`,
-      position: "bottom-right",
     });
 
     form.reset();
@@ -94,15 +106,17 @@ export const WithdrawalForm = () => {
               <Wallet className="w-5 h-5 text-primary" />
             </div>
             <div>
-              <CardDescription className="text-xs text-muted-foreground uppercase tracking-widest">
-                Available Balance
+              <CardDescription className="text-xs text-muted-foreground uppercase tracking-widest flex items-center gap-1">
+                {isActualInvestor ? "Total Withdrawable" : "Available Balance"}
+                {isActualInvestor && (
+                  <TrendingUp className="size-3 text-emerald-500" />
+                )}
               </CardDescription>
               {isLoading ? (
-                // Skeleton
-                <div className="h-8 w-24 bg-muted rounded animate-pulse" />
+                <Skeleton className="h-8 w-24" />
               ) : (
                 <CardTitle className="payout-text text-2xl font-extrabold text-primary">
-                  {data?.balance.toLocaleString()}/-
+                  {totalWithdrawable.toLocaleString()}/-
                 </CardTitle>
               )}
             </div>
@@ -124,16 +138,16 @@ export const WithdrawalForm = () => {
                       id="withdraw-amount"
                       type="number"
                       placeholder="Enter amount"
-                      aria-invalid={fieldState.invalid}
+                      disabled={isLoading}
                     />
                     <FieldDescription>
-                      Maximum withdrawal:{" "}
-                      {isLoading ? (
-                        <span className="inline-block w-12 h-3 bg-muted rounded animate-pulse" />
-                      ) : (
-                        data?.balance.toLocaleString()
+                      Max:{" "}
+                      {isLoading ? "..." : totalWithdrawable.toLocaleString()}/-
+                      {isActualInvestor && (
+                        <span className="ml-1 text-[10px] text-emerald-600 font-medium">
+                          (Bonus included)
+                        </span>
                       )}
-                      /-
                     </FieldDescription>
                     {fieldState.invalid && (
                       <FieldError errors={[fieldState.error]} />
@@ -150,19 +164,15 @@ export const WithdrawalForm = () => {
                       M-Pesa Number
                     </FieldLabel>
                     {isUserLoading ? (
-                      <Skeleton className="h-7" />
+                      <Skeleton className="h-10 w-full" />
                     ) : (
                       <Input
                         {...field}
                         id="withdraw-phone"
                         type="tel"
                         placeholder="e.g. 0712345678"
-                        aria-invalid={fieldState.invalid}
                       />
                     )}
-                    <FieldDescription>
-                      Enter the M-Pesa number to receive the funds
-                    </FieldDescription>
                     {fieldState.invalid && (
                       <FieldError errors={[fieldState.error]} />
                     )}
@@ -178,7 +188,7 @@ export const WithdrawalForm = () => {
             size="xl"
             className="w-full"
             form="withdraw-form"
-            disabled={isSubmitting || isLoading}
+            disabled={isSubmitting || isLoading || totalWithdrawable <= 0}
           >
             {isSubmitting && <Spinner className="mr-2" />}
             Withdraw to M-Pesa
@@ -187,7 +197,7 @@ export const WithdrawalForm = () => {
       </Card>
 
       <p className="text-xs text-muted-foreground mt-6 text-center">
-        Withdrawals are processed instantly. No minimum amount. No fees.
+        Withdrawals are processed instantly. No fees.
       </p>
     </motion.div>
   );

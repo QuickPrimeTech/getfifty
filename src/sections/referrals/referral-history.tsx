@@ -48,7 +48,7 @@ export const ReferralHistory = () => {
                 </div>
                 <div>
                   <p className="text-sm font-medium">
-                    {ref.description || "Referred User"}
+                    {ref.referred_user_name}
                   </p>
                   <p className="text-xs text-muted-foreground">
                     {format(new Date(ref.created_at), "MMM dd, h:mm a")}

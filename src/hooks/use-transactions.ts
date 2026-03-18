@@ -5,6 +5,7 @@ import { createClient } from "@/lib/supabase/client";
 export type Transaction = {
   id: string;
   profile_id: string;
+  referred_user_name: string;
   amount: number;
   type: "earning" | "withdrawal"; // reflect RPC types
   status: string;

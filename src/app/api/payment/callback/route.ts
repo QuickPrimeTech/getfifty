@@ -48,7 +48,9 @@ export async function POST(request: Request) {
         type: "deposit",
         description: data.failed_reason
           ? `${data.failed_reason}`
-          : `${data.mpesa_reference || "Processing"}`,
+          : status === "complete"
+            ? `Payment Completed ${data.mpesa_reference}`
+            : "Processing",
         charges,
       },
       { onConflict: "invoice_id" },

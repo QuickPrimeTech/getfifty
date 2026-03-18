@@ -42,12 +42,23 @@ export async function updateSession(request: NextRequest) {
 
   const pathname = request.nextUrl.pathname;
 
-  // 1. Target specifically the dashboard routes
+  // 1. CAPTURE: Look for 'ref' in the URL
+  const ref = request.nextUrl.searchParams.get("ref");
+
+  if (ref) {
+    // 2. STORE: Bake it into a cookie that lasts 30 days
+    supabaseResponse.cookies.set("referral_code", ref, {
+      path: "/",
+      maxAge: 60 * 60 * 24 * 30, // 30 days
+      sameSite: "lax",
+    });
+  }
+
+  // 2. Target specifically the dashboard routes
   const isDashboardRoute = pathname.startsWith("/dashboard");
   const isAuthRoute = pathname.startsWith("/auth");
-  const authenticatorRoutes = ["/auth/create-account", "/auth/login"];
 
-  // 2. PROTECT DASHBOARD: If trying to access dashboard without a session
+  // 3. PROTECT DASHBOARD: If trying to access dashboard without a session
   if (isDashboardRoute && !user) {
     const url = request.nextUrl.clone();
     url.pathname = `/auth/login`;
@@ -56,7 +67,7 @@ export async function updateSession(request: NextRequest) {
     return NextResponse.redirect(url);
   }
 
-  // 3. REDIRECT LOGGED IN USERS: If logged in but hitting /auth pages
+  // 4. REDIRECT LOGGED IN USERS: If logged in but hitting /auth pages
   if (user && isAuthRoute) {
     const url = request.nextUrl.clone();
 

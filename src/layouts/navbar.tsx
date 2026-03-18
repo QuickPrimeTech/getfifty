@@ -34,6 +34,7 @@ export const navLinks = [
   { label: "Home", href: "/" },
   { label: "Calculate Payout", href: "/#calculator" },
   { label: "Help & Support", href: "/help" },
+  { label: "Create Account", href: "/auth/create-account" },
   { label: "Login", href: "/auth/login" },
 ];
 

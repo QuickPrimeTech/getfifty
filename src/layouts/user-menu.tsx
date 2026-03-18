@@ -11,10 +11,28 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { LogoutButton } from "@/sections/auth/logout-button";
-import { AlertCircle, User } from "lucide-react";
+import { AlertCircle, ArrowUpDown, User, Wallet } from "lucide-react";
 import { useUserQuery } from "@/hooks/use-user";
 import { Skeleton } from "@/components/ui/skeleton";
 import Link from "next/link";
+
+export const dropdownLinks = [
+  {
+    label: "Account",
+    icon: User,
+    url: "/dashboard/account",
+  },
+  {
+    label: "Withdraw",
+    icon: Wallet,
+    url: "/dashboard/withdraw",
+  },
+  {
+    label: "My Transactions",
+    icon: ArrowUpDown,
+    url: "/dashboard/transactions",
+  },
+];
 
 function Content({ children }: React.ComponentProps<"div">) {
   return (
@@ -22,14 +40,17 @@ function Content({ children }: React.ComponentProps<"div">) {
       <DropdownMenuGroup>{children}</DropdownMenuGroup>
       <DropdownMenuSeparator />
       <DropdownMenuGroup>
-        <DropdownMenuItem
-          nativeButton={false}
-          className={"cursor-pointer"}
-          render={<Link href={"/dashboard/account"} />}
-        >
-          <User className="mr-2 size-4" />
-          Account
-        </DropdownMenuItem>
+        {dropdownLinks.map((link) => (
+          <DropdownMenuItem
+            key={link.label}
+            nativeButton={false}
+            className={"cursor-pointer"}
+            render={<Link href={link.url} />}
+          >
+            <link.icon className="mr-2 size-4" />
+            {link.label}
+          </DropdownMenuItem>
+        ))}
       </DropdownMenuGroup>
       <DropdownMenuSeparator />
       <DropdownMenuGroup>

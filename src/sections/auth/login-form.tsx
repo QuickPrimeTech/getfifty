@@ -1,5 +1,5 @@
 "use client";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
 import { createClient } from "@/lib/supabase/client";
@@ -32,6 +32,7 @@ export function LoginForm({
   const [isLoading, setIsLoading] = useState(false);
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const router = useRouter();
+  const searchParams = useSearchParams();
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -46,7 +47,12 @@ export function LoginForm({
       });
       if (error) throw error;
       // Update this route to redirect to an authenticated route. The user already has an active session.
-      router.push("/dashboard");
+      const next = searchParams.get("next");
+
+      // 🔒 prevent open redirect attacks
+      const safeNext = next && next.startsWith("/") ? next : "/dashboard";
+
+      router.push(safeNext);
     } catch (error: unknown) {
       setError(error instanceof Error ? error.message : "An error occurred");
     } finally {
@@ -127,7 +133,11 @@ export function LoginForm({
             <div className="mt-4 text-center text-sm">
               Don&apos;t have an account?{" "}
               <Link
-                href="/auth/create-account"
+                href={`/auth/create-account${
+                  searchParams.get("next")
+                    ? `?next=${encodeURIComponent(searchParams.get("next")!)}`
+                    : ""
+                }`}
                 className="underline underline-offset-4"
               >
                 Sign up for free

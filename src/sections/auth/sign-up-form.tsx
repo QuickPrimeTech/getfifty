@@ -1,5 +1,5 @@
 "use client";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
 import { createClient } from "@/lib/supabase/client";
@@ -33,9 +33,8 @@ export function SignUpForm({
   const [showRepeatPassword, setShowRepeatPassword] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
-  const [isGoogleLoading, setIsGoogleLoading] = useState(false);
-  const [isFacebookLoading, setIsFacebookLoading] = useState(false);
   const router = useRouter();
+  const searchParams = useSearchParams();
 
   const handleSignUp = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -50,11 +49,26 @@ export function SignUpForm({
     }
 
     try {
+      const referralCode = document.cookie
+        .split("; ")
+        .find((c) => c.startsWith("referral_code="))
+        ?.split("=")[1];
+
+      // Extract the 'next' param, or default to dashboard/home
+      const next = searchParams.get("next") || "/dashboard";
+
+      // 2. Build the redirect URL with the 'next' parameter encoded
+      // This sends the user to /auth/callback (standard) or directly to the dashboard
+      // but keeps the 'next' instruction alive.
+
       const { error } = await supabase.auth.signUp({
         email,
         password,
         options: {
-          emailRedirectTo: `${window.location.origin}/dashboard`,
+          emailRedirectTo: `${window.location.origin}/auth/callback?next=${next}`,
+          data: {
+            referral_code: referralCode, // <-- this will be visible in raw_user_meta_data
+          },
         },
       });
       if (error) throw error;
@@ -63,32 +77,6 @@ export function SignUpForm({
       setError(error instanceof Error ? error.message : "An error occurred");
     } finally {
       setIsLoading(false);
-    }
-  };
-
-  const signInWithOAuth = async (provider: "google" | "facebook") => {
-    const supabase = createClient();
-    setError(null);
-
-    if (provider === "google") setIsGoogleLoading(true);
-    if (provider === "facebook") setIsFacebookLoading(true);
-
-    try {
-      const { error } = await supabase.auth.signInWithOAuth({
-        provider,
-        options: {
-          redirectTo: `${window.location.origin}/auth/callback`,
-        },
-      });
-      if (error) throw error;
-    } catch (error: unknown) {
-      setError(
-        error instanceof Error
-          ? error.message
-          : `Failed to sign in with ${provider}`,
-      );
-      if (provider === "google") setIsGoogleLoading(false);
-      if (provider === "facebook") setIsFacebookLoading(false);
     }
   };
 
@@ -185,11 +173,7 @@ export function SignUpForm({
                   </InputGroup>
                 </div>
                 {error && <p className="text-sm text-red-500">{error}</p>}
-                <Button
-                  type="submit"
-                  className="w-full"
-                  disabled={isLoading || isGoogleLoading || isFacebookLoading}
-                >
+                <Button type="submit" className="w-full" disabled={isLoading}>
                   {isLoading ? "Creating an account..." : "Create account"}
                 </Button>
               </div>

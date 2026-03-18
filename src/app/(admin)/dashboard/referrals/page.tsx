@@ -15,7 +15,7 @@ export const metadata: Metadata = {
 export default function Referrals() {
   return (
     <>
-      <div className="mb-8">
+      <div>
         <h1 className="text-2xl md:text-3xl font-extrabold tracking-display">
           Referrals
         </h1>

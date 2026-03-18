@@ -73,6 +73,7 @@ export const LinkCard = () => {
           </div>
 
           <Button
+            nativeButton={false}
             className="w-full h-12 bg-primary text-primary-foreground font-bold rounded-full hover:opacity-90 transition-opacity group"
             render={<Link href="/auth/create-account" />}
           >

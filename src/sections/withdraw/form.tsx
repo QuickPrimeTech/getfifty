@@ -3,7 +3,6 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Controller, useForm } from "react-hook-form";
 import { motion } from "framer-motion";
 import { Wallet, TrendingUp } from "lucide-react";
-import * as z from "zod";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import {
@@ -27,23 +26,7 @@ import { useDashboardStats } from "@/hooks/use-dashboard-stats";
 import { useUserQuery } from "@/hooks/use-user";
 import { useInvestorStatQuery } from "@/hooks/use-investor-stat";
 import { Skeleton } from "@/components/ui/skeleton";
-
-const withdrawSchema = z.object({
-  amount: z
-    .string()
-    .min(1, "Amount is required")
-    .refine((val) => !isNaN(Number(val)), "Must be a valid number")
-    .refine((val) => Number(val) > 0, "Amount must be greater than 0"),
-  phone: z
-    .string()
-    .min(1, "Phone number is required")
-    .refine(
-      (val) => /^0[0-9]{9}$/.test(val) || /^[0-9]{9}$/.test(val),
-      "Enter a valid Kenyan phone number (e.g. 0712345678)",
-    ),
-});
-
-type WithdrawFormValues = z.infer<typeof withdrawSchema>;
+import { WithdrawFormValues, withdrawSchema } from "@/schemas/withdraw";
 
 export const WithdrawalForm = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);

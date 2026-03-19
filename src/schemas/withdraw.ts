@@ -7,7 +7,7 @@ export const getWithdrawSchema = (maxAmount?: number) =>
       .string()
       .min(1, "Amount is required")
       .refine((val) => !isNaN(Number(val)), "Must be a valid number")
-      .refine((val) => Number(val) >= 40, "Minimum withdrawal is KES 40/-")
+      .refine((val) => Number(val) >= 50, "Minimum withdrawal is KES 50/-")
       // Check if maxAmount exists. If not, return true (valid).
       .refine(
         (val) => {

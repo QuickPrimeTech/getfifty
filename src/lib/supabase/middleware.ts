@@ -37,8 +37,7 @@ export async function updateSession(request: NextRequest) {
 
   // IMPORTANT: If you remove getClaims() and you use server-side rendering
   // with the Supabase client, your users may be randomly logged out.
-  const { data } = await supabase.auth.getClaims();
-  const user = data?.claims;
+  const { data: user, error } = await supabase.auth.getClaims();
 
   const pathname = request.nextUrl.pathname;
 
@@ -59,7 +58,7 @@ export async function updateSession(request: NextRequest) {
   const isAuthRoute = pathname.startsWith("/auth");
 
   // 3. PROTECT DASHBOARD: If trying to access dashboard without a session
-  if (isDashboardRoute && !user) {
+  if (isDashboardRoute && (!user || error)) {
     const url = request.nextUrl.clone();
     url.pathname = `/auth/login`;
     // Optional: add a redirect param to bring them back after login

@@ -4,7 +4,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect } from "react";
 import { motion } from "framer-motion";
 import { toast } from "sonner";
-import { Save } from "lucide-react";
+import { PartyPopper, Save } from "lucide-react";
 import { useUserQuery } from "@/hooks/use-user";
 import { createClient } from "@/lib/supabase/client";
 import { useQueryClient } from "@tanstack/react-query";
@@ -19,6 +19,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Spinner } from "@/components/ui/spinner";
 import { AccountFormValues, accountSchema } from "@/schemas/account";
+import Link from "next/link";
 
 export const AccountForm = () => {
   const { data: user, isLoading } = useUserQuery();
@@ -58,7 +59,29 @@ export const AccountForm = () => {
       if (error) throw error;
 
       await queryClient.invalidateQueries({ queryKey: ["user"] });
-      toast.success("Account profile updated successfully");
+      if (user?.referralCode) {
+        toast.success("Account profile updated successfully");
+      } else {
+        toast.success("Account profile updated successfully", {
+          description: (
+            <div className="flex flex-col gap-2">
+              <p className="text-xs text-muted-foreground">
+                Finish your setup by activating your account
+              </p>
+              <Button
+                size="sm"
+                variant="default"
+                className="w-fit h-8 text-xs px-3 shadow-none"
+                render={<Link href={"/dashboard"} />}
+              >
+                <PartyPopper className="mr-2 size-3" />
+                Activate Your Account
+              </Button>
+            </div>
+          ),
+          duration: 5000,
+        });
+      }
     } catch (error: any) {
       toast.error("Error", { description: error.message });
     }

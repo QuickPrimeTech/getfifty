@@ -25,7 +25,7 @@ export async function POST(
       return createResponse(400, validation.error.issues[0].message);
     }
 
-    const amount = 20;
+    const amount = 100;
 
     if (!user.profileId || !user.phone) {
       return createResponse(400, "Missing phone number or user info");

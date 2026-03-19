@@ -23,8 +23,8 @@ export const CTASection = () => {
               <span className="text-primary">Split the win.</span>
             </h2>
             <p className="text-lg text-muted-foreground mb-10 leading-relaxed max-w-[40ch]">
-              No minimum withdrawal. Paid instantly. Join the network today for
-              just 100/-.
+              Minimum withdrawal as low as Ksh 50/-. Paid instantly. Join the
+              network today for just 100/-.
             </p>
             <Button
               size={"xl"}
@@ -36,7 +36,9 @@ export const CTASection = () => {
           </motion.div>
           <div className="relative flex-1 aspect-3/2">
             <Image
-              src={"/split-earn.png"}
+              src={
+                "https://res.cloudinary.com/quick-prime-tech/image/upload/v1773929285/split-earn_nudskt.png"
+              }
               alt="Split and earn illustration"
               className="object-fill"
               loading="lazy"

@@ -58,7 +58,7 @@ export async function updateSession(request: NextRequest) {
   const isAuthRoute = pathname.startsWith("/auth");
 
   // 3. PROTECT DASHBOARD: If trying to access dashboard without a session
-  if (isDashboardRoute && (!user || error)) {
+  if (isDashboardRoute && (!user?.claims || error)) {
     const url = request.nextUrl.clone();
     url.pathname = `/auth/login`;
     // Optional: add a redirect param to bring them back after login

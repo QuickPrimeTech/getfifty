@@ -4,7 +4,7 @@ import { motion } from "framer-motion";
 import { Shield, Zap, Lock } from "lucide-react";
 
 const items = [
-  { icon: Shield, label: "No minimum withdrawal" },
+  { icon: Shield, label: "Minimum withdrawal as low as 50/-" },
   { icon: Zap, label: "Instant payouts" },
   { icon: Lock, label: "Secure M-Pesa" },
 ];

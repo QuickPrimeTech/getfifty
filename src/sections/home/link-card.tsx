@@ -8,7 +8,7 @@ import Link from "next/link";
 
 export const LinkCard = () => {
   const [copied, setCopied] = useState(false);
-  const link = "https://getfifty.vercel.app/auth/create-account?referrer=xyz";
+  const link = "https://getfifty.vercel.app/join/xyz";
   const handleCopy = () => {
     navigator.clipboard.writeText(link);
     setCopied(true);

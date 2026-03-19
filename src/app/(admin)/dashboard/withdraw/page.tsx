@@ -4,7 +4,7 @@ import type { Metadata } from "next";
 export const metadata: Metadata = {
   title: "Withdraw - GetFifty",
   description:
-    "Withdraw your earnings to M-Pesa instantly. No minimum amount, no fees. Enter your amount and phone number to receive your funds.",
+    "Withdraw your earnings to M-Pesa instantly. Only a mimimimum withdrawal amount of 50/-, no fees. Enter your amount and phone number to receive your funds.",
   keywords: ["withdraw", "mpesa", "payout", "earnings", "cash out"],
   robots: {
     index: false,

@@ -16,14 +16,16 @@ const steps = [
     title: "Share Your Link",
     description:
       "Share your unique link anywhere — WhatsApp, Telegram, socials, SMS e.t.c",
-    image: "/share-link.png",
+    image:
+      "https://res.cloudinary.com/quick-prime-tech/image/upload/v1773929259/share-link_kd4shq.png",
   },
   {
     number: "03",
     title: "Earn Per Referral",
     description:
       "Every person who joins through your link earns you 50/-. Paid instantly. No minimum withdrawal.",
-    image: "/split-earn.png",
+    image:
+      "https://res.cloudinary.com/quick-prime-tech/image/upload/v1773929285/split-earn_nudskt.png",
   },
 ];
 

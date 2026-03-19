@@ -25,7 +25,7 @@ const faqs = [
   {
     question: "When do I get paid?",
     answer:
-      "Withdrawals are processed instantly to your M-Pesa number. There's no minimum withdrawal amount and no fees.",
+      "Withdrawals are processed instantly to your M-Pesa number. Minimum withdrawal amount as low as 50 /- and no fees.",
   },
   {
     question: "Is there a limit to how much I can earn?",

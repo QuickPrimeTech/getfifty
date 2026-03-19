@@ -21,7 +21,7 @@ export function AppBreadcrumb() {
   const pathname = usePathname(); // e.g., "/dashboard/account/settings"
   const segments = pathname.split("/").filter(Boolean); // ["dashboard", "account", "settings"]
   const router = useRouter();
-  if (segments[0] === "dashboard") return null;
+  if (segments[0] === "dashboard" && segments.length === 1) return null;
   return (
     <div className="flex items-center gap-4">
       {segments.length > 1 && (

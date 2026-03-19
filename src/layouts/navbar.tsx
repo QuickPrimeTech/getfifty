@@ -39,7 +39,7 @@ export const navLinks = [
 ];
 
 export const contactInfo = [
-  { icon: Phone, label: "+254 700 000 00", href: "tel:+254700000000" },
+  { icon: Phone, label: "+254 787 638 364", href: "tel:+254787638364" },
   {
     icon: Mail,
     label: "info@getfifty.com",

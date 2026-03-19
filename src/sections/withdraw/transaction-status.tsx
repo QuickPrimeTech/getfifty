@@ -13,19 +13,21 @@ import {
 import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
+import { useQueryClient } from "@tanstack/react-query";
+import { toast } from "sonner";
 
-interface TransactionStatusProps {
+type TransactionStatusProps = {
   transactionId: string;
   onClose?: () => void;
-}
+};
 
 // Define the shape of our status objects to satisfy TypeScript
-interface StatusItem {
+type StatusItem = {
   icon: any;
   color: string;
   label: string;
   animate?: string;
-}
+};
 
 const statusConfig: Record<string, StatusItem> = {
   pending: {
@@ -58,7 +60,19 @@ export const TransactionStatus = ({
   const [tx, setTx] = useState<{ status: string; description: string } | null>(
     null,
   );
+  const queryClient = useQueryClient();
   const supabase = createClient();
+
+  const handleRefreshData = () => {
+    // We specifically target only the data that changes after a withdrawal
+    queryClient.invalidateQueries({ queryKey: ["dashboard-stats"] });
+    queryClient.invalidateQueries({ queryKey: ["investor-stat"] });
+    queryClient.invalidateQueries({ queryKey: ["transactions"] });
+
+    // Note: ["user"] is NOT invalidated here, keeping it cached and fast.
+
+    toast.success("Balances updated successfully!");
+  };
 
   useEffect(() => {
     const fetchInitial = async () => {
@@ -83,10 +97,15 @@ export const TransactionStatus = ({
           filter: `id=eq.${transactionId}`,
         },
         (payload) => {
+          const newStatus = payload.new.status;
           setTx({
-            status: payload.new.status,
+            status: newStatus,
             description: payload.new.description,
           });
+          // Trigger invalidation if the status just became complete
+          if (newStatus === "complete") {
+            handleRefreshData();
+          }
         },
       )
       .subscribe();
